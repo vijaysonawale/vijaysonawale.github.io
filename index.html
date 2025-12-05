@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Post Government Jobs</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .required { color: red; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+        .tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .add-tag-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Admin Portal</h1>
+        <p class="subtitle">Post New Government Job Openings</p>
+        
+        <div id="message" class="message"></div>
+        
+        <form id="jobForm">
+            <!-- Basic Info -->
+            <div class="form-group">
+                <label>Job Title <span class="required">*</span></label>
+                <input type="text" id="title" required placeholder="e.g., SSC Junior Engineer Recruitment 2025">
+            </div>
+            
+            <div class="form-group">
+                <label>Organization <span class="required">*</span></label>
+                <input type="text" id="organization" required placeholder="e.g., Staff Selection Commission">
+            </div>
+            
+            <div class="form-group">
+                <label>Post Name <span class="required">*</span></label>
+                <input type="text" id="postName" required placeholder="e.g., Junior Engineer (Civil)">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="Brief description of the job..."></textarea>
+            </div>
+            
+            <!-- Age Requirements -->
+            <div class="row">
+                <div class="form-group">
+                    <label>Min Age</label>
+                    <input type="number" id="minAge" placeholder="Leave blank if N/A">
+                    <div class="helper-text">Leave empty if no minimum age</div>
+                </div>
+                <div class="form-group">
+                    <label>Max Age</label>
+                    <input type="number" id="maxAge" placeholder="Leave blank if N/A">
+                    <div class="helper-text">Leave empty if no maximum age</div>
+                </div>
+            </div>
+            
+            <!-- Education -->
+            <div class="form-group">
+                <label>Education Required <span class="required">*</span></label>
+                <select id="educationRequired" required>
+                    <option value="">Select Education Level</option>
+                    <option value="10th">10th</option>
+                    <option value="12th">12th</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Degree">Degree</option>
+                    <option value="Post Graduate">Post Graduate</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Education Fields</label>
+                <select id="fieldInput">
+                    <option value="">Select field to add</option>
+                    <optgroup label="Diploma Fields">
+                        <option value="Civil Engineering">Civil Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Electronics Engineering">Electronics Engineering</option>
+                        <option value="Computer Engineering">Computer Engineering</option>
+                        <option value="Automobile Engineering">Automobile Engineering</option>
+                    </optgroup>
+                    <optgroup label="Degree/UG Fields">
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Naval Architecture">Naval Architecture</option>
+                        <option value="Marine Engineering">Marine Engineering</option>
+                        <option value="Automotive Engineering">Automotive Engineering</option>
+                        <option value="Mechatronics">Mechatronics</option>
+                        <option value="Aerospace Engineering">Aerospace Engineering</option>
+                        <option value="Aeronautical Engineering">Aeronautical Engineering</option>
+                        <option value="Metallurgy">Metallurgy</option>
+                        <option value="Industrial Engineering">Industrial Engineering</option>
+                        <option value="Power Engineering">Power Engineering</option>
+                    </optgroup>
+                    <optgroup label="Post Graduate Fields">
+                        <option value="Management">Management</option>
+                    </optgroup>
+                    <optgroup label="General Fields">
+                        <option value="Science">Science (for 12th)</option>
+                        <option value="Commerce">Commerce (for 12th)</option>
+                        <option value="Arts">Arts (for 12th)</option>
+                    </optgroup>
+                </select>
+                <button type="button" class="add-tag-btn" onclick="addField()">+ Add Field</button>
+                <div class="helper-text">Add specific fields required. Leave empty if any field is accepted.</div>
+                <div id="fieldsContainer" class="tag-input"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Minimum Percentage <span class="required">*</span></label>
+                <input type="number" id="minPercentage" required min="0" max="100" step="0.01" placeholder="e.g., 60">
+            </div>
+            
+            <!-- Additional Requirements -->
+            <div class="form-group">
+                <label>Additional Requirements</label>
+                <textarea id="additionalRequirements" placeholder="Any special conditions, experience requirements, etc."></textarea>
+            </div>
+            
+            <!-- Categories -->
+            <div class="form-group">
+                <label>Eligible Categories</label>
+                <div class="helper-text">Leave empty if all categories are eligible</div>
+                <div style="margin-top: 10px;">
+                    <label><input type="checkbox" value="General" class="category-check"> General</label>
+                    <label style="margin-left: 15px;"><input type="checkbox" value="OBC" class="category-check"> OBC</label>
+                    <label style="margin-left: 15px;"><input type="checkbox" value="SC" class="category-check"> SC</label>
+                    <label style="margin-left: 15px;"><input type="checkbox" value="ST" class="category-check"> ST</label>
+                    <label style="margin-left: 15px;"><input type="checkbox" value="EWS" class="category-check"> EWS</label>
+                </div>
+            </div>
+            
+            <!-- State & Deadline -->
+            <div class="row">
+                <div class="form-group">
+                    <label>State <span class="required">*</span></label>
+                    <select id="state" required>
+                        <option value="All India">All India</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Gujarat">Gujarat</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Application Deadline <span class="required">*</span></label>
+                    <input type="date" id="deadline" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Apply Link <span class="required">*</span></label>
+                <input type="url" id="applyLink" required placeholder="https://example.com/apply">
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">📤 Post Job</button>
+        </form>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://zayqemanhzjgjyxwmbnt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheXFlbWFuaHpqZ2p5eHdtYm50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MDAxMDMsImV4cCI6MjA4MDQ3NjEwM30.xjV-PCNhj3_GCs4q8GoojI3b3yhjgEd1CyGgWpJQP7o';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let educationFields = [];
+        
+        function addField() {
+            const select = document.getElementById('fieldInput');
+            const field = select.value;
+            if (field && !educationFields.includes(field)) {
+                educationFields.push(field);
+                renderFields();
+                select.value = '';
+            }
+        }
+        
+        function removeField(field) {
+            educationFields = educationFields.filter(f => f !== field);
+            renderFields();
+        }
+        
+        function renderFields() {
+            const container = document.getElementById('fieldsContainer');
+            container.innerHTML = educationFields.map(field => `
+                <div class="tag">
+                    ${field}
+                    <button type="button" onclick="removeField('${field}')">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 5000);
+        }
+        
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
+            
+            const categories = Array.from(document.querySelectorAll('.category-check:checked'))
+                .map(cb => cb.value);
+            
+            const jobData = {
+                title: document.getElementById('title').value,
+                organization: document.getElementById('organization').value,
+                post_name: document.getElementById('postName').value,
+                description: document.getElementById('description').value || null,
+                min_age: document.getElementById('minAge').value || null,
+                max_age: document.getElementById('maxAge').value || null,
+                education_required: document.getElementById('educationRequired').value,
+                education_fields: educationFields,
+                min_percentage: parseFloat(document.getElementById('minPercentage').value),
+                additional_requirements: document.getElementById('additionalRequirements').value || null,
+                categories: categories,
+                state: document.getElementById('state').value,
+                application_deadline: document.getElementById('deadline').value,
+                apply_link: document.getElementById('applyLink').value
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('jobs')
+                    .insert([jobData]);
+                
+                if (error) throw error;
+                
+                showMessage('✅ Job posted successfully!', 'success');
+                document.getElementById('jobForm').reset();
+                educationFields = [];
+                renderFields();
+            } catch (error) {
+                showMessage('❌ Error: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📤 Post Job';
+            }
+        });
+    </script>
+</body>
+</html>
