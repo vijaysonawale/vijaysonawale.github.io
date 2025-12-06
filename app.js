@@ -153,8 +153,6 @@ async function loadAllJobs() {
             .order('posted_date', { ascending: false });
 
         if (error) throw error;
-
-        document.getElementById('totalJobsHero').textContent = data.length;
         renderJobs(data, 'allJobs');
     } catch (error) {
         console.error(error);
