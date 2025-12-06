@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://sarkariai.in/sitemap.xml
+
+# Crawl delay (optional, adjust as needed)
+Crawl-delay: 1
+
+# Google Adsense bot
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google bot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing bot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

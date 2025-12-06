@@ -93,7 +93,6 @@ function toggleProfileDropdown() {
     }
 }
 
-// Also handle touch events for mobile
 document.addEventListener('touchstart', (e) => {
     const dropdown = document.getElementById('profileDropdown');
     const profileIcon = document.querySelector('.profile-icon');
@@ -116,7 +115,6 @@ function showTab(tab) {
     const recommendedSection = document.getElementById('recommendedJobsSection');
     const allSection = document.getElementById('allJobsSection');
 
-    // Show jobs section if hidden
     document.getElementById('jobs').classList.remove('hidden');
     document.getElementById('profileSection').classList.add('hidden');
 
@@ -174,28 +172,21 @@ async function loadRecommendedJobs() {
 
         if (error) throw error;
 
-        // Same matching logic as Flutter app
         const matched = allJobs.filter(job => {
-            // 1. Age check
             if (job.min_age && userProfile.age < job.min_age) return false;
             if (job.max_age && userProfile.age > job.max_age) return false;
 
-            // 2. Education level check
             const levels = { '10th': 1, '12th': 2, 'Diploma': 3, 'Degree': 4, 'Post Graduate': 5 };
             if (levels[userProfile.education_level] < levels[job.education_required]) return false;
 
-            // 3. Education field check
             if (job.education_fields?.length && userProfile.education_field) {
                 if (!job.education_fields.includes(userProfile.education_field)) return false;
             }
 
-            // 4. Percentage check
             if (userProfile.percentage < job.min_percentage) return false;
 
-            // 5. Category check
             if (job.categories?.length && !job.categories.includes(userProfile.category)) return false;
 
-            // 6. State check
             if (job.state !== 'All India' && job.state !== userProfile.state) return false;
 
             return true;
@@ -220,15 +211,36 @@ function renderJobs(jobs, containerId) {
         return;
     }
 
-    container.innerHTML = jobs.map(job => `
-        <div class="job-card">
-            <div class="job-title">${job.title}</div>
-            <div class="job-org">${job.organization} • ${job.post_name}</div>
+    container.innerHTML = jobs.map(job => {
+        // Create SEO-friendly description
+        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage}% required. Apply before ${formatDate(job.application_deadline)}.`;
+        const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
+        
+        return `
+        <article class="job-card" itemscope itemtype="https://schema.org/JobPosting">
+            <meta itemprop="datePosted" content="${job.posted_date}" />
+            <meta itemprop="validThrough" content="${job.application_deadline}" />
+            
+            <div class="job-title" itemprop="title">
+                <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">
+                    ${job.title}
+                </a>
+            </div>
+            
+            <div class="job-org" itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization">
+                <span itemprop="name">${job.organization}</span> • ${job.post_name}
+            </div>
+            
+            <div itemprop="description" style="color: #666; margin: 10px 0; font-size: 14px;">
+                ${shortDesc}
+            </div>
             
             <div class="job-meta">
                 <span>📅 Deadline: ${formatDate(job.application_deadline)}</span>
-                <span>🎓 ${job.education_required}</span>
-                <span>📍 ${job.state}</span>
+                <span itemprop="educationRequirements">🎓 ${job.education_required}</span>
+                <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place">
+                    <span itemprop="address">📍 ${job.state}</span>
+                </span>
                 ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 0}-${job.max_age || '∞'}</span>` : ''}
                 <span>📊 Min ${job.min_percentage}%</span>
             </div>
@@ -239,11 +251,17 @@ function renderJobs(jobs, containerId) {
                 </div>
             ` : ''}
             
-            <a href="${job.apply_link}" target="_blank" class="btn-apply">
-                Apply Now →
-            </a>
-        </div>
-    `).join('');
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center;">
+                    View Details →
+                </a>
+                <a href="${job.apply_link}" target="_blank" class="btn-apply" style="flex: 1; text-align: center; background: #28a745;">
+                    Apply Now →
+                </a>
+            </div>
+        </article>
+    `;
+    }).join('');
 }
 
 function formatDate(dateStr) {
