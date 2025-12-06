@@ -530,6 +530,14 @@
                 }
                 
                 console.log('✅ Login successful:', data.user.email);
+                
+                // Check if user is admin BEFORE showing success
+                if (!ADMIN_EMAILS.includes(data.user.email)) {
+                    console.error('❌ Non-admin login attempt:', data.user.email);
+                    await supabase.auth.signOut();
+                    throw new Error('Access Denied! Only authorized admins can access this panel.');
+                }
+                
                 showLoginError('✅ Login successful! Loading dashboard...', 'success');
                 
                 setTimeout(() => {
@@ -548,14 +556,6 @@
         const ADMIN_EMAILS = ['sonawalesvijay@gmail.com'];
         
         async function showDashboard(user) {
-            // Check if user email is in admin list
-            if (!ADMIN_EMAILS.includes(user.email)) {
-                console.error('❌ Unauthorized access attempt by:', user.email);
-                showLoginError('❌ Access Denied! You are not authorized to access this admin panel.', 'error');
-                await supabase.auth.signOut();
-                return;
-            }
-            
             console.log('✅ Admin access granted to:', user.email);
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
