@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Job Management</title>
+    <title>Admin - SarkariAI Job Management</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -49,6 +49,8 @@
             cursor: pointer;
             font-weight: 600;
             transition: opacity 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn:hover { opacity: 0.9; }
         .btn-primary {
@@ -66,24 +68,6 @@
         .btn-secondary {
             background: #6c757d;
             color: white;
-        }
-        .add-job-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 30px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-        .add-job-btn:hover {
-            transform: scale(1.1);
         }
         .job-card {
             border: 2px solid #eee;
@@ -130,6 +114,7 @@
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         .modal {
             display: none;
@@ -176,6 +161,7 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
+            font-family: inherit;
         }
         input:focus, textarea:focus, select:focus {
             outline: none;
@@ -272,6 +258,16 @@
             font-size: 14px;
             opacity: 0.9;
         }
+        @media (max-width: 768px) {
+            .row { grid-template-columns: 1fr; }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .job-actions { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+        }
     </style>
 </head>
 <body>
@@ -295,6 +291,10 @@
             
             <button type="submit" class="btn btn-primary" style="width: 100%;" id="loginBtn">Login</button>
         </form>
+        
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            <a href="index.html" style="color: #667eea;">← Back to Home</a>
+        </p>
     </div>
 
     <!-- Dashboard -->
@@ -306,6 +306,7 @@
             </div>
             <div class="header-actions">
                 <button class="btn btn-success" onclick="openAddModal()">+ Add New Job</button>
+                <a href="index.html" class="btn btn-secondary">🏠 Home</a>
                 <button class="btn btn-danger" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -416,7 +417,7 @@
                             <option value="Arts">Arts</option>
                         </optgroup>
                     </select>
-                    <button type="button" class="btn btn-success" style="margin-top: 5px;" onclick="addField()">+ Add</button>
+                    <button type="button" class="btn btn-success" style="margin-top: 5px; width: auto;" onclick="addField()">+ Add</button>
                     <div id="fieldsContainer" class="tag-input"></div>
                 </div>
                 
@@ -575,7 +576,7 @@
                     ` : ''}
                     
                     <div class="job-actions">
-                        <button class="btn btn-secondary" onclick='editJob(${JSON.stringify(job)})'>✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick='editJob(${JSON.stringify(job).replace(/'/g, "\\'")})''>✏️ Edit</button>
                         <button class="btn btn-danger" onclick="deleteJob('${job.id}')">🗑️ Delete</button>
                         <a href="${job.apply_link}" target="_blank" class="btn btn-primary">🔗 View Link</a>
                     </div>
