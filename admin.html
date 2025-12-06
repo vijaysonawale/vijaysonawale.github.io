@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - SarkariAI Job Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        h1 { color: #667eea; }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .admin-email {
+            color: #666;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .job-card {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+        .job-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .job-title {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .job-org {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .badge {
+            background: #e7f3ff;
+            color: #004085;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+        .modal.active { display: block; }
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-modal:hover { color: #333; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .required { color: red; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+        .tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .hidden { display: none; }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+        @media (max-width: 768px) {
+            .row { grid-template-columns: 1fr; }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .job-actions { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="container login-container">
+        <h1 style="text-align: center;">🔐 Admin Login</h1>
+        <p style="text-align: center; color: #666; margin: 20px 0;">Sign in to manage SarkariAI jobs</p>
+        
+        <div id="loginMessage" class="message hidden"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" id="loginEmail" required placeholder="admin@sarkariai.in">
+            </div>
+            
+            <div class="form-group">
+                <label>Password <span class="required">*</span></label>
+                <input type="password" id="loginPassword" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;" id="loginBtn">Login</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            <a href="index.html" style="color: #667eea;">← Back to Home</a>
+        </p>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="container hidden">
+        <div class="header">
+            <div>
+                <h1>🏛️ SarkariAI - Job Management</h1>
+                <span class="admin-email" id="adminEmail"></span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="openAddModal()">+ Add New Job</button>
+                <a href="index.html" class="btn btn-secondary">🏠 Home</a>
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalJobs">0</div>
+                <div class="stat-label">Total Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeJobs">0</div>
+                <div class="stat-label">Active Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="expiredJobs">0</div>
+                <div class="stat-label">Expired Jobs</div>
+            </div>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+        
+        <!-- Jobs Feed -->
+        <div id="jobsContainer">
+            <div class="loading">Loading jobs...</div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Job Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add New Job</h2>
+            
+            <form id="jobForm">
+                <input type="hidden" id="jobId">
+                
+                <div class="form-group">
+                    <label>Job Title <span class="required">*</span></label>
+                    <input type="text" id="title" required placeholder="e.g., Junior Engineer Recruitment 2025">
+                </div>
+                
+                <div class="form-group">
+                    <label>Organization <span class="required">*</span></label>
+                    <input type="text" id="organization" required placeholder="e.g., Indian Railways">
+                </div>
+                
+                <div class="form-group">
+                    <label>Post Name <span class="required">*</span></label>
+                    <input type="text" id="postName" required placeholder="e.g., Junior Engineer (Civil)">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description" placeholder="Brief description of the job posting..."></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label>Min Age</label>
+                        <input type="number" id="minAge" min="18" max="100" placeholder="e.g., 18">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Age</label>
+                        <input type="number" id="maxAge" min="18" max="100" placeholder="e.g., 32">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Education Required <span class="required">*</span></label>
+                    <select id="educationRequired" required>
+                        <option value="">Select education level</option>
+                        <option value="10th">10th</option>
+                        <option value="12th">12th</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Degree">Degree</option>
+                        <option value="Post Graduate">Post Graduate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Education Fields (Optional)</label>
+                    <div class="helper-text">Select specific fields if required, or leave empty for any field</div>
+                    <select id="fieldInput">
+                        <option value="">Select field to add</option>
+                        <optgroup label="Diploma">
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="Electronics Engineering">Electronics Engineering</option>
+                            <option value="Computer Engineering">Computer Engineering</option>
+                            <option value="Automobile Engineering">Automobile Engineering</option>
+                        </optgroup>
+                        <optgroup label="Degree/UG">
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Naval Architecture">Naval Architecture</option>
+                            <option value="Marine Engineering">Marine Engineering</option>
+                            <option value="Automotive Engineering">Automotive Engineering</option>
+                            <option value="Mechatronics">Mechatronics</option>
+                            <option value="Aerospace Engineering">Aerospace Engineering</option>
+                            <option value="Aeronautical Engineering">Aeronautical Engineering</option>
+                            <option value="Metallurgy">Metallurgy</option>
+                            <option value="Industrial Engineering">Industrial Engineering</option>
+                            <option value="Power Engineering">Power Engineering</option>
+                        </optgroup>
+                        <optgroup label="Post Graduate">
+                            <option value="Management">Management</option>
+                        </optgroup>
+                        <optgroup label="General">
+                            <option value="Science">Science</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Arts">Arts</option>
+                        </optgroup>
+                    </select>
+                    <button type="button" class="btn btn-success" style="margin-top: 5px; width: auto;" onclick="addField()">+ Add Field</button>
+                    <div id="fieldsContainer" class="tag-input"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Minimum Percentage <span class="required">*</span></label>
+                    <input type="number" id="minPercentage" required min="0" max="100" step="0.01" placeholder="e.g., 60">
+                    <div class="helper-text">Minimum percentage required in the specified education level</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Additional Requirements</label>
+                    <textarea id="additionalRequirements" placeholder="Any additional requirements like experience, certificates, etc."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Eligible Categories</label>
+                    <div class="helper-text">Leave unchecked for all categories</div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="General" class="category-check"> General</label>
+                        <label><input type="checkbox" value="OBC" class="category-check"> OBC</label>
+                        <label><input type="checkbox" value="SC" class="category-check"> SC</label>
+                        <label><input type="checkbox" value="ST" class="category-check"> ST</label>
+                        <label><input type="checkbox" value="EWS" class="category-check"> EWS</label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label>State <span class="required">*</span></label>
+                        <select id="state" required>
+                            <option value="All India">All India</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                            <option value="Delhi">Delhi</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Application Deadline <span class="required">*</span></label>
+                        <input type="date" id="deadline" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Official Apply Link <span class="required">*</span></label>
+                    <input type="url" id="applyLink" required placeholder="https://example.com/apply">
+                    <div class="helper-text">Link to the official application page</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">Save Job</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://zayqemanhzjgjyxwmbnt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheXFlbWFuaHpqZ2p5eHdtYm50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MDAxMDMsImV4cCI6MjA4MDQ3NjEwM30.xjV-PCNhj3_GCs4q8GoojI3b3yhjgEd1CyGgWpJQP7o';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let educationFields = [];
+        let isEditMode = false;
+        
+        // Check authentication on load
+        checkAuth();
+        
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                showDashboard(user);
+            } else {
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }
+        }
+        
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                });
+                
+                if (error) throw error;
+                showDashboard(data.user);
+            } catch (error) {
+                showLoginError('❌ ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Login';
+            }
+        });
+        
+        async function showDashboard(user) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('adminEmail').textContent = '👤 ' + user.email;
+            loadJobs();
+        }
+        
+        async function loadJobs() {
+            try {
+                const { data, error } = await supabase
+                    .from('jobs')
+                    .select('*')
+                    .order('posted_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                const now = new Date();
+                const active = data.filter(j => new Date(j.application_deadline) >= now);
+                const expired = data.filter(j => new Date(j.application_deadline) < now);
+                
+                document.getElementById('totalJobs').textContent = data.length;
+                document.getElementById('activeJobs').textContent = active.length;
+                document.getElementById('expiredJobs').textContent = expired.length;
+                
+                renderJobs(data);
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('jobsContainer').innerHTML = 
+                    '<div class="loading">Error loading jobs. Please refresh the page.</div>';
+            }
+        }
+        
+        function renderJobs(jobs) {
+            const container = document.getElementById('jobsContainer');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No jobs posted yet</h3>
+                        <p>Click "Add New Job" to post your first job</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = jobs.map(job => {
+                const isExpired = new Date(job.application_deadline) < new Date();
+                return `
+                <div class="job-card" style="${isExpired ? 'opacity: 0.6;' : ''}">
+                    <div class="job-title">${job.title} ${isExpired ? '(Expired)' : ''}</div>
+                    <div class="job-org">${job.organization} • ${job.post_name}</div>
+                    
+                    <div class="job-meta">
+                        <span>📅 ${formatDate(job.application_deadline)}</span>
+                        <span>🎓 ${job.education_required}</span>
+                        <span>📍 ${job.state}</span>
+                        ${job.min_age || job.max_age ? `<span>👤 ${formatAge(job.min_age, job.max_age)}</span>` : ''}
+                        <span>📊 Min ${job.min_percentage}%</span>
+                    </div>
+                    
+                    ${job.education_fields?.length ? `
+                        <div style="margin: 10px 0;">
+                            ${job.education_fields.map(f => `<span class="badge">${f}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${job.categories?.length ? `
+                        <div style="margin: 10px 0;">
+                            <strong>Categories:</strong> ${job.categories.join(', ')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="job-actions">
+                        <button class="btn btn-secondary" onclick='editJob(${JSON.stringify(job).replace(/'/g, "\\'")})''>✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteJob('${job.id}')">🗑️ Delete</button>
+                        <a href="${job.apply_link}" target="_blank" class="btn btn-primary">🔗 View Link</a>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const days = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+            if (days < 0) return '❌ Expired on ' + date.toLocaleDateString('en-IN');
+            if (days === 0) return '⚠️ Expires Today';
+            if (days <= 7) return `⚠️ ${days} days left`;
+            return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        
+        function formatAge(min, max) {
+            if (!min && !max) return 'N/A';
+            if (!min) return `Up to ${max} years`;
+            if (!max) return `${min}+ years`;
+            return `${min}-${max} years`;
+        }
+        
+        function openAddModal() {
+            isEditMode = false;
+            document.getElementById('modalTitle').textContent = 'Add New Job';
+            document.getElementById('jobForm').reset();
+            document.getElementById('jobId').value = '';
+            educationFields = [];
+            renderFields();
+            document.querySelectorAll('.category-check').forEach(cb => cb.checked = false);
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('deadline').min = today;
+            
+            document.getElementById('jobModal').classList.add('active');
+        }
+        
+        function editJob(job) {
+            isEditMode = true;
+            document.getElementById('modalTitle').textContent = 'Edit Job';
+            document.getElementById('jobId').value = job.id;
+            document.getElementById('title').value = job.title;
+            document.getElementById('organization').value = job.organization;
+            document.getElementById('postName').value = job.post_name;
+            document.getElementById('description').value = job.description || '';
+            document.getElementById('minAge').value = job.min_age || '';
+            document.getElementById('maxAge').value = job.max_age || '';
+            document.getElementById('educationRequired').value = job.education_required;
+            educationFields = job.education_fields || [];
+            renderFields();
+            document.getElementById('minPercentage').value = job.min_percentage;
+            document.getElementById('additionalRequirements').value = job.additional_requirements || '';
+            document.querySelectorAll('.category-check').forEach(cb => {
+                cb.checked = job.categories?.includes(cb.value) || false;
+            });
+            document.getElementById('state').value = job.state;
+            document.getElementById('deadline').value = job.application_deadline.split('T')[0];
+            document.getElementById('applyLink').value = job.apply_link;
+            document.getElementById('jobModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('jobModal').classList.remove('active');
+        }
+        
+        function addField() {
+            const select = document.getElementById('fieldInput');
+            const field = select.value;
+            if (field && !educationFields.includes(field)) {
+                educationFields.push(field);
+                renderFields();
+                select.value = '';
+            }
+        }
+        
+        function removeField(field) {
+            educationFields = educationFields.filter(f => f !== field);
+            renderFields();
+        }
+        
+        function renderFields() {
+            const container = document.getElementById('fieldsContainer');
+            if (educationFields.length === 0) {
+                container.innerHTML = '<div style="color: #999; padding: 10px;">No fields added</div>';
+                return;
+            }
+            container.innerHTML = educationFields.map(field => `
+                <div class="tag">
+                    ${field}
+                    <button type="button" onclick="removeField('${field}')">×</button>
+                </div>
+            `).join('');
+        }
+        
+        // Job form submission
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            
+            const categories = Array.from(document.querySelectorAll('.category-check:checked'))
+                .map(cb => cb.value);
+            
+            const jobData = {
+                title: document.getElementById('title').value,
+                organization: document.getElementById('organization').value,
+                post_name: document.getElementById('postName').value,
+                description: document.getElementById('description').value || null,
+                min_age: document.getElementById('minAge
