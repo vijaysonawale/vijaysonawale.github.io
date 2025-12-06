@@ -4,17 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SarkariAI - Smart Government Job Matching with AI</title>
-    <meta name="description" content="Find government jobs that match your profile. AI-powered job recommendations for SSC, Railway, UPSC, State PSC and more. Get personalized job alerts.">
-    <meta name="keywords" content="government jobs, sarkari naukri, AI job matching, SSC jobs, railway jobs, UPSC, state government jobs, job recommendations">
-    <meta name="author" content="SarkariAI">
-    <link rel="canonical" href="https://sarkariai.in">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="SarkariAI - Smart Government Job Matching">
-    <meta property="og:description" content="AI-powered government job recommendations based on your profile">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sarkariai.in">
-    
+    <meta name="description" content="Find government jobs that match your profile. AI-powered job recommendations for SSC, Railway, UPSC, State PSC and more.">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,7 +13,6 @@
             background: #f5f7fa;
         }
         
-        /* Header */
         header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -44,9 +33,7 @@
         .logo {
             font-size: 28px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            cursor: pointer;
         }
         .nav-links {
             display: flex;
@@ -57,9 +44,8 @@
             color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: opacity 0.3s;
+            cursor: pointer;
         }
-        .nav-links a:hover { opacity: 0.8; }
         .btn {
             padding: 10px 20px;
             border: none;
@@ -74,98 +60,61 @@
             background: white;
             color: #667eea;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            color: #667eea;
         }
         
-        /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 80px 20px;
             text-align: center;
         }
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        .hero p {
-            font-size: 20px;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-top: 40px;
-        }
-        .stat {
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-        }
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; }
+        .hero p { font-size: 20px; margin-bottom: 30px; opacity: 0.9; }
         
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
         
-        /* Features */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin: 60px 0;
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
         }
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        .feature-card h3 {
+        .tab.active {
             color: #667eea;
-            margin-bottom: 10px;
+            border-bottom-color: #667eea;
         }
         
-        /* Jobs Section */
-        .section-title {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-        }
         .job-card {
             background: white;
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-        }
-        .job-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
         }
         .job-title {
             color: #667eea;
@@ -192,6 +141,7 @@
             border-radius: 5px;
             font-size: 12px;
             display: inline-block;
+            margin-right: 5px;
         }
         .btn-apply {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -201,12 +151,10 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 15px;
-        }
-        .btn-apply:hover {
-            opacity: 0.9;
+            border: none;
+            cursor: pointer;
         }
         
-        /* Auth Modal */
         .modal {
             display: none;
             position: fixed;
@@ -218,15 +166,19 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
         }
         .modal.active { display: flex; }
         .modal-content {
             background: white;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
             border-radius: 12px;
             padding: 30px;
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px;
         }
         .close-modal {
             position: absolute;
@@ -236,6 +188,7 @@
             cursor: pointer;
             color: #999;
         }
+        
         .form-group {
             margin-bottom: 20px;
         }
@@ -256,13 +209,42 @@
             outline: none;
             border-color: #667eea;
         }
+        
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .info-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
         .loading {
             text-align: center;
             padding: 50px;
             color: #666;
         }
+        .hidden { display: none; }
         
-        /* Footer */
         footer {
             background: #2d3748;
             color: white;
@@ -277,17 +259,11 @@
             gap: 30px;
             margin-bottom: 30px;
         }
-        .footer-section h3 {
-            margin-bottom: 15px;
-        }
         .footer-section a {
             color: #a0aec0;
             text-decoration: none;
             display: block;
             margin-bottom: 10px;
-        }
-        .footer-section a:hover {
-            color: white;
         }
         .footer-bottom {
             max-width: 1200px;
@@ -297,94 +273,69 @@
             text-align: center;
             color: #a0aec0;
         }
-        .hidden { display: none; }
         
         @media (max-width: 768px) {
             .hero h1 { font-size: 32px; }
-            .hero-stats { flex-direction: column; gap: 20px; }
-            .nav-links { display: none; }
+            .nav-links a:not(.profile-icon):not(.btn) { display: none; }
+            .tabs { overflow-x: auto; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="nav-container">
-            <div class="logo">
-                🤖 SarkariAI
-            </div>
+            <div class="logo" onclick="showHome()">🤖 SarkariAI</div>
             <div class="nav-links">
-                <a href="#jobs">Jobs</a>
-                <a href="#features">Features</a>
-                <a href="about.html">About</a>
-                <button class="btn btn-primary" onclick="openAuthModal()">Login / Sign Up</button>
+                <a onclick="showJobs()">Jobs</a>
+                <a href="#about">About</a>
+                <div id="authButton"></div>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>Find Your Perfect Government Job</h1>
-        <p>AI-powered job matching based on your education, age, and qualifications</p>
-        <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;" onclick="openAuthModal()">
-            Get Started - It's Free!
-        </button>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-number" id="totalJobsHero">0</div>
-                <div class="stat-label">Active Jobs</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">AI</div>
-                <div class="stat-label">Smart Matching</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Free to Use</div>
-            </div>
-        </div>
-    </section>
+    <div id="homeSection">
+        <section class="hero">
+            <h1>Find Your Perfect Government Job</h1>
+            <p>AI-powered job matching based on your education, age, and qualifications</p>
+            <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;" onclick="handleGetStarted()">
+                Get Started - It's Free!
+            </button>
+        </section>
+    </div>
 
-    <!-- Features Section -->
-    <div class="container">
-        <h2 class="section-title" id="features">Why Choose SarkariAI?</h2>
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Smart Matching</h3>
-                <p>AI analyzes your profile and shows only jobs you're eligible for</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Real-time Updates</h3>
-                <p>Get latest government job notifications instantly</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎓</div>
-                <h3>All Education Levels</h3>
-                <p>10th, 12th, Diploma, Degree, Post Graduate - All covered</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Mobile App</h3>
-                <p>Access jobs anywhere with our Android app</p>
-            </div>
+    <div id="jobsSection" class="container hidden">
+        <h2 style="font-size: 32px; color: #333; margin-bottom: 30px; text-align: center;">Government Jobs</h2>
+        
+        <div class="tabs" id="jobTabs">
+            <button class="tab active" onclick="showTab('recommended')">🎯 Recommended For You</button>
+            <button class="tab" onclick="showTab('all')">📋 All Jobs</button>
+        </div>
+        
+        <div id="recommendedJobs">
+            <div class="loading">Loading your recommended jobs...</div>
+        </div>
+        
+        <div id="allJobs" class="hidden">
+            <div class="loading">Loading all jobs...</div>
         </div>
     </div>
 
-    <!-- Latest Jobs Section -->
-    <div class="container" id="jobs">
-        <h2 class="section-title">Latest Government Jobs</h2>
-        <div id="jobsContainer">
-            <div class="loading">Loading latest jobs...</div>
+    <div id="profileSection" class="container hidden">
+        <h2 style="font-size: 32px; color: #333; margin-bottom: 30px;">My Profile</h2>
+        <div class="profile-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Profile Information</h3>
+                <button class="btn btn-primary" onclick="openEditProfile()">Edit Profile</button>
+            </div>
+            <div id="profileInfo"></div>
         </div>
+        <button class="btn btn-apply" onclick="logout()" style="margin-top: 20px; background: #dc3545;">Logout</button>
     </div>
 
-    <!-- Auth Modal -->
     <div id="authModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeAuthModal()">&times;</span>
-            <h2>Create Your Profile</h2>
+            <h2 id="authTitle">Create Account</h2>
             <p style="color: #666; margin-bottom: 20px;">Get personalized job recommendations</p>
             
             <form id="authForm">
@@ -396,40 +347,92 @@
                     <label>Password</label>
                     <input type="password" id="password" required minlength="6">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;" id="authBtn">Sign Up / Login</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="authBtn">Sign Up</button>
             </form>
             
-            <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #666;">
-                By signing up, you agree to our Terms & Privacy Policy
+            <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+                <span id="authToggleText">Already have an account?</span>
+                <a href="#" onclick="toggleAuthMode(event)" style="color: #667eea; font-weight: 600;">Login</a>
             </p>
         </div>
     </div>
 
-    <!-- Footer -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeProfileModal()">&times;</span>
+            <h2>Complete Your Profile</h2>
+            <p style="color: #666; margin-bottom: 20px;">Help us find the best jobs for you</p>
+            
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="phone">
+                </div>
+                <div class="form-group">
+                    <label>Age *</label>
+                    <input type="number" id="age" required min="15" max="65">
+                </div>
+                <div class="form-group">
+                    <label>Education Level *</label>
+                    <select id="educationLevel" required onchange="updateFields()">
+                        <option value="">Select</option>
+                        <option value="10th">10th</option>
+                        <option value="12th">12th</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Degree">Degree</option>
+                        <option value="Post Graduate">Post Graduate</option>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="fieldGroup">
+                    <label>Education Field *</label>
+                    <select id="educationField"></select>
+                </div>
+                <div class="form-group">
+                    <label>Percentage/CGPA * (in %)</label>
+                    <input type="number" id="percentage" required min="0" max="100" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="category" required>
+                        <option value="General">General</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="EWS">EWS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferred State *</label>
+                    <select id="state" required>
+                        <option value="All India">All India</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="West Bengal">West Bengal</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="profileBtn">Save Profile</button>
+            </form>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>🤖 SarkariAI</h3>
-                <p style="color: #a0aec0;">Smart government job matching powered by AI. Find jobs that match your profile instantly.</p>
+                <p style="color: #a0aec0;">Smart government job matching powered by AI.</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <a href="#jobs">Browse Jobs</a>
-                <a href="#features">Features</a>
-                <a href="about.html">About Us</a>
-                <a href="mailto:support@sarkariai.in">Contact</a>
-            </div>
-            <div class="footer-section">
-                <h3>Job Categories</h3>
-                <a href="#jobs">SSC Jobs</a>
-                <a href="#jobs">Railway Jobs</a>
-                <a href="#jobs">UPSC Jobs</a>
-                <a href="#jobs">State PSC Jobs</a>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <a href="privacy-policy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
+                <a href="#about">About Us</a>
                 <a href="admin.html" style="font-size: 11px; opacity: 0.3;">Admin</a>
             </div>
         </div>
@@ -444,66 +447,98 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        loadJobs();
+        let currentUser = null;
+        let userProfile = null;
+        let isLoginMode = false;
         
-        async function loadJobs() {
+        const educationFieldsMap = {
+            'Diploma': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Engineering', 'Automobile Engineering'],
+            'Degree': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Information Technology', 'Naval Architecture', 'Marine Engineering', 'Automotive Engineering', 'Mechatronics', 'Aerospace Engineering', 'Aeronautical Engineering', 'Metallurgy', 'Industrial Engineering', 'Power Engineering'],
+            'Post Graduate': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Management']
+        };
+        
+        checkAuth();
+        
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                currentUser = user;
+                await loadUserProfile();
+            }
+            updateAuthButton();
+        }
+        
+        async function loadUserProfile() {
             try {
                 const { data, error } = await supabase
-                    .from('jobs')
+                    .from('users_profiles')
                     .select('*')
-                    .gte('application_deadline', new Date().toISOString())
-                    .order('posted_date', { ascending: false })
-                    .limit(10);
+                    .eq('user_id', currentUser.id)
+                    .limit(1)
+                    .single();
                 
-                if (error) {
-                    console.error('Supabase error:', error);
-                    throw error;
+                if (data) {
+                    userProfile = data;
                 }
-                
-                document.getElementById('totalJobsHero').textContent = data.length || 0;
-                renderJobs(data || []);
             } catch (error) {
-                console.error('Load jobs error:', error);
-                document.getElementById('jobsContainer').innerHTML = 
-                    '<div class="loading">Loading jobs...</div>';
+                console.log('No profile found');
             }
         }
         
-        function renderJobs(jobs) {
-            const container = document.getElementById('jobsContainer');
-            
-            if (jobs.length === 0) {
-                container.innerHTML = '<div class="loading">No active jobs at the moment. Check back soon!</div>';
-                return;
+        function updateAuthButton() {
+            const btn = document.getElementById('authButton');
+            if (currentUser && userProfile) {
+                btn.innerHTML = '<div class="profile-icon" onclick="showProfile()">👤</div>';
+            } else {
+                btn.innerHTML = '<button class="btn btn-primary" onclick="openAuthModal()">Login / Sign Up</button>';
             }
-            
-            container.innerHTML = jobs.map(job => `
-                <div class="job-card">
-                    <div class="job-title">${job.title}</div>
-                    <div class="job-org">${job.organization} • ${job.post_name}</div>
-                    
-                    <div class="job-meta">
-                        <span>📅 Deadline: ${formatDate(job.application_deadline)}</span>
-                        <span>🎓 ${job.education_required}</span>
-                        <span>📍 ${job.state}</span>
-                    </div>
-                    
-                    ${job.education_fields?.length ? `
-                        <div style="margin: 10px 0;">
-                            ${job.education_fields.map(f => `<span class="badge">${f}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                    
-                    <a href="${job.apply_link}" target="_blank" class="btn-apply">
-                        Apply Now →
-                    </a>
-                </div>
-            `).join('');
         }
         
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        function handleGetStarted() {
+            if (currentUser && userProfile) {
+                showJobs();
+            } else {
+                openAuthModal();
+            }
+        }
+        
+        function showHome() {
+            document.getElementById('homeSection').classList.remove('hidden');
+            document.getElementById('jobsSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+        }
+        
+        function showJobs() {
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('jobsSection').classList.remove('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            if (currentUser && userProfile) {
+                loadRecommendedJobs();
+            } else {
+                document.getElementById('recommendedJobs').innerHTML = '<div class="loading">Please login and complete your profile to see recommended jobs</div>';
+            }
+            loadAllJobs();
+        }
+        
+        function showProfile() {
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('jobsSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.remove('hidden');
+            displayProfile();
+        }
+        
+        function showTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'recommended') {
+                document.getElementById('recommendedJobs').classList.remove('hidden');
+                document.getElementById('allJobs').classList.add('hidden');
+            } else {
+                document.getElementById('recommendedJobs').classList.add('hidden');
+                document.getElementById('allJobs').classList.remove('hidden');
+            }
         }
         
         function openAuthModal() {
@@ -512,6 +547,22 @@
         
         function closeAuthModal() {
             document.getElementById('authModal').classList.remove('active');
+        }
+        
+        function toggleAuthMode(e) {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                document.getElementById('authTitle').textContent = 'Login';
+                document.getElementById('authBtn').textContent = 'Login';
+                document.getElementById('authToggleText').textContent = "Don't have an account?";
+                e.target.textContent = 'Sign Up';
+            } else {
+                document.getElementById('authTitle').textContent = 'Create Account';
+                document.getElementById('authBtn').textContent = 'Sign Up';
+                document.getElementById('authToggleText').textContent = 'Already have an account?';
+                e.target.textContent = 'Login';
+            }
         }
         
         document.getElementById('authForm').addEventListener('submit', async (e) => {
@@ -524,26 +575,258 @@
             const password = document.getElementById('password').value;
             
             try {
-                // Try login first
-                let { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                
-                // If login fails, try signup
-                if (error) {
-                    const signupResult = await supabase.auth.signUp({ email, password });
-                    if (signupResult.error) throw signupResult.error;
-                    alert('Account created! Please check your email to verify, then login via our mobile app.');
+                if (isLoginMode) {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    currentUser = data.user;
+                    await loadUserProfile();
+                    closeAuthModal();
+                    updateAuthButton();
+                    if (userProfile) {
+                        showJobs();
+                    } else {
+                        openProfileModal();
+                    }
                 } else {
-                    alert('Login successful! Please download our mobile app to access personalized recommendations.');
+                    const { data, error } = await supabase.auth.signUp({ email, password });
+                    if (error) throw error;
+                    currentUser = data.user;
+                    closeAuthModal();
+                    alert('Account created successfully! Please complete your profile.');
+                    openProfileModal();
                 }
-                
-                closeAuthModal();
             } catch (error) {
                 alert('Error: ' + error.message);
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Sign Up / Login';
+                btn.textContent = isLoginMode ? 'Login' : 'Sign Up';
             }
         });
+        
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
+            if (userProfile) {
+                document.getElementById('fullName').value = userProfile.full_name;
+                document.getElementById('phone').value = userProfile.phone || '';
+                document.getElementById('age').value = userProfile.age;
+                document.getElementById('educationLevel').value = userProfile.education_level;
+                updateFields();
+                document.getElementById('educationField').value = userProfile.education_field || '';
+                document.getElementById('percentage').value = userProfile.percentage;
+                document.getElementById('category').value = userProfile.category;
+                document.getElementById('state').value = userProfile.state;
+            }
+        }
+        
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+        
+        function openEditProfile() {
+            openProfileModal();
+        }
+        
+        function updateFields() {
+            const level = document.getElementById('educationLevel').value;
+            const fieldGroup = document.getElementById('fieldGroup');
+            const fieldSelect = document.getElementById('educationField');
+            
+            if (level === '10th' || level === '12th') {
+                fieldGroup.classList.add('hidden');
+                fieldSelect.removeAttribute('required');
+            } else if (educationFieldsMap[level]) {
+                fieldGroup.classList.remove('hidden');
+                fieldSelect.setAttribute('required', 'required');
+                fieldSelect.innerHTML = '<option value="">Select Field</option>' +
+                    educationFieldsMap[level].map(f => `<option value="${f}">${f}</option>`).join('');
+            }
+        }
+        
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('profileBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            
+            const level = document.getElementById('educationLevel').value;
+            const profileData = {
+                user_id: currentUser.id,
+                full_name: document.getElementById('fullName').value,
+                email: currentUser.email,
+                phone: document.getElementById('phone').value || null,
+                age: parseInt(document.getElementById('age').value),
+                education_level: level,
+                education_field: (level !== '10th' && level !== '12th') ? document.getElementById('educationField').value : null,
+                percentage: parseFloat(document.getElementById('percentage').value),
+                category: document.getElementById('category').value,
+                state: document.getElementById('state').value
+            };
+            
+            try {
+                const { error } = await supabase
+                    .from('users_profiles')
+                    .upsert(profileData, { onConflict: 'user_id' });
+                
+                if (error) throw error;
+                
+                userProfile = profileData;
+                closeProfileModal();
+                updateAuthButton();
+                alert('Profile saved successfully!');
+                showJobs();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Profile';
+            }
+        });
+        
+        async function loadRecommendedJobs() {
+            if (!userProfile) {
+                document.getElementById('recommendedJobs').innerHTML = '<div class="loading">Please complete your profile first</div>';
+                return;
+            }
+            
+            try {
+                const { data: allJobs, error } = await supabase
+                    .from('jobs')
+                    .select('*')
+                    .gte('application_deadline', new Date().toISOString())
+                    .order('posted_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Same matching logic as Flutter app
+                const matched = allJobs.filter(job => {
+                    // 1. Age check
+                    if (job.min_age && userProfile.age < job.min_age) return false;
+                    if (job.max_age && userProfile.age > job.max_age) return false;
+                    
+                    // 2. Education level check
+                    const levels = {'10th': 1, '12th': 2, 'Diploma': 3, 'Degree': 4, 'Post Graduate': 5};
+                    if (levels[userProfile.education_level] < levels[job.education_required]) return false;
+                    
+                    // 3. Education field check
+                    if (job.education_fields?.length && userProfile.education_field) {
+                        if (!job.education_fields.includes(userProfile.education_field)) return false;
+                    }
+                    
+                    // 4. Percentage check
+                    if (userProfile.percentage < job.min_percentage) return false;
+                    
+                    // 5. Category check
+                    if (job.categories?.length && !job.categories.includes(userProfile.category)) return false;
+                    
+                    // 6. State check
+                    if (job.state !== 'All India' && job.state !== userProfile.state) return false;
+                    
+                    return true;
+                });
+                
+                renderJobs(matched, 'recommendedJobs');
+            } catch (error) {
+                console.error(error);
+                document.getElementById('recommendedJobs').innerHTML = '<div class="loading">Error loading jobs</div>';
+            }
+        }
+        
+        async function loadAllJobs() {
+            try {
+                const { data, error } = await supabase
+                    .from('jobs')
+                    .select('*')
+                    .gte('application_deadline', new Date().toISOString())
+                    .order('posted_date', { ascending: false });
+                
+                if (error) throw error;
+                renderJobs(data, 'allJobs');
+            } catch (error) {
+                console.error(error);
+                document.getElementById('allJobs').innerHTML = '<div class="loading">Error loading jobs</div>';
+            }
+        }
+        
+        function renderJobs(jobs, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (jobs.length === 0) {
+                container.innerHTML = '<div class="loading">No matching jobs found. Try updating your profile or check back later!</div>';
+                return;
+            }
+            
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-org">${job.organization} • ${job.post_name}</div>
+                    <div class="job-meta">
+                        <span>📅 Deadline: ${new Date(job.application_deadline).toLocaleDateString('en-IN')}</span>
+                        <span>🎓 ${job.education_required}</span>
+                        <span>📍 ${job.state}</span>
+                        ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 0}-${job.max_age || '∞'}</span>` : ''}
+                        <span>📊 Min ${job.min_percentage}%</span>
+                    </div>
+                    ${job.education_fields?.length ? `
+                        <div>${job.education_fields.map(f => `<span class="badge">${f}</span>`).join('')}</div>
+                    ` : ''}
+                    <a href="${job.apply_link}" target="_blank" class="btn-apply">Apply Now →</a>
+                </div>
+            `).join('');
+        }
+        
+        function displayProfile() {
+            if (!userProfile) return;
+            
+            document.getElementById('profileInfo').innerHTML = `
+                <div class="profile-info">
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value">${userProfile.full_name}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">${userProfile.email}</div>
+                    </div>
+                    ${userProfile.phone ? `
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">${userProfile.phone}</div>
+                    </div>
+                    ` : ''}
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="info-value">${userProfile.age} years</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Education</div>
+                        <div class="info-value">${userProfile.education_level}${userProfile.education_field ? ' - ' + userProfile.education_field : ''}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Percentage</div>
+                        <div class="info-value">${userProfile.percentage}%</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Category</div>
+                        <div class="info-value">${userProfile.category}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Preferred State</div>
+                        <div class="info-value">${userProfile.state}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                await supabase.auth.signOut();
+                currentUser = null;
+                userProfile = null;
+                updateAuthButton();
+                showHome();
+                alert('Logged out successfully!');
+            }
+        }
     </script>
 </body>
 </html>
