@@ -194,7 +194,19 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
-
+        /* Fix for mobile - make both buttons visible and stack vertically */
+        @media (max-width: 768px) {
+            .job-card > div:last-child {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .job-card a {
+                width: 100% !important;
+                display: block !important;
+            }
+        }
         /* Features */
         .features {
             display: grid;
