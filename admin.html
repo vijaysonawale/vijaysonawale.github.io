@@ -13,16 +13,14 @@
             min-height: 100vh;
             padding: 20px;
         }
-
-        /* Add India flag stripe effect to sections */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
-            border-top: 3px solid #FF9933;
-            border-bottom: 3px solid #138808;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -272,7 +270,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="container login-container hidden">
@@ -484,9 +481,9 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let educationFields = [];
         let isEditMode = false;
-
+        
         checkAuth();
-
+        
         async function checkAuth() {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
@@ -780,7 +777,7 @@
                 showMessage('❌ Error: ' + error.message, 'error');
             }
         }
-
+        
         function showMessage(text, type) {
             const msg = document.getElementById('message');
             msg.textContent = text;
