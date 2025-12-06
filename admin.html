@@ -496,20 +496,41 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            console.log('🔐 Attempting login for:', email);
+            
             btn.disabled = true;
             btn.textContent = 'Logging in...';
             
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({
-                    email: document.getElementById('loginEmail').value,
-                    password: document.getElementById('loginPassword').value
+                    email: email,
+                    password: password
                 });
                 
-                if (error) throw error;
-                showDashboard(data.user);
+                console.log('Login response:', { data, error });
+                
+                if (error) {
+                    console.error('❌ Login error:', error);
+                    throw error;
+                }
+                
+                if (!data.user) {
+                    throw new Error('No user data returned. Please check your credentials.');
+                }
+                
+                console.log('✅ Login successful:', data.user.email);
+                showLoginError('✅ Login successful! Loading dashboard...', 'success');
+                
+                setTimeout(() => {
+                    showDashboard(data.user);
+                }, 500);
+                
             } catch (error) {
-                showLoginError('❌ ' + error.message);
-            } finally {
+                console.error('❌ Login failed:', error);
+                showLoginError('❌ Login failed: ' + error.message);
                 btn.disabled = false;
                 btn.textContent = 'Login';
             }
@@ -745,10 +766,10 @@
             setTimeout(() => msg.classList.add('hidden'), 5000);
         }
         
-        function showLoginError(text) {
+        function showLoginError(text, type = 'error') {
             const msg = document.getElementById('loginMessage');
             msg.textContent = text;
-            msg.className = 'message error';
+            msg.className = `message ${type}`;
             msg.classList.remove('hidden');
             setTimeout(() => msg.classList.add('hidden'), 5000);
         }
