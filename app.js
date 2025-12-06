@@ -36,7 +36,7 @@ async function loadUserProfile() {
             .eq('user_id', currentUser.id)
             .limit(1)
             .single();
-        
+
         if (data) {
             userProfile = data;
         }
@@ -49,17 +49,29 @@ function updateAuthButton() {
     const btn = document.getElementById('authButton');
     if (currentUser && userProfile) {
         btn.innerHTML = `
-            <div class="profile-icon" onclick="toggleProfileDropdown()">
-                👤
-                <div class="profile-dropdown" id="profileDropdown">
-                    <a onclick="showProfilePage()">My Profile</a>
-                    <a onclick="logout()">Logout</a>
-                </div>
-            </div>
+            <div class="profile-icon" onclick="openProfileMenu()">👤</div>
         `;
     } else {
         btn.innerHTML = '<button class="btn btn-primary" onclick="openAuthModal()">Login / Sign Up</button>';
     }
+}
+
+function openProfileMenu() {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 300px;">
+            <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <h2 style="margin-bottom: 20px;">Profile Menu</h2>
+            <button class="btn btn-primary" onclick="showProfilePage(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px;">
+                👤 My Profile
+            </button>
+            <button class="btn btn-apply" onclick="logout(); this.closest('.modal').remove();" style="width: 100%; background: #dc3545;">
+                🚪 Logout
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }
 
 function updateGetStartedButton() {
@@ -76,14 +88,16 @@ function updateGetStartedButton() {
 
 function toggleProfileDropdown() {
     const dropdown = document.getElementById('profileDropdown');
-    dropdown.classList.toggle('active');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
 }
 
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
+// Also handle touch events for mobile
+document.addEventListener('touchstart', (e) => {
     const dropdown = document.getElementById('profileDropdown');
     const profileIcon = document.querySelector('.profile-icon');
-    if (dropdown && !profileIcon?.contains(e.target)) {
+    if (dropdown && profileIcon && !profileIcon.contains(e.target)) {
         dropdown.classList.remove('active');
     }
 });
@@ -101,17 +115,17 @@ function showTab(tab) {
     const tabAll = document.getElementById('tabAll');
     const recommendedSection = document.getElementById('recommendedJobsSection');
     const allSection = document.getElementById('allJobsSection');
-    
+
     // Show jobs section if hidden
     document.getElementById('jobs').classList.remove('hidden');
     document.getElementById('profileSection').classList.add('hidden');
-    
+
     if (tab === 'recommended') {
         tabRecommended.classList.add('active');
         tabAll.classList.remove('active');
         recommendedSection.classList.remove('hidden');
         allSection.classList.add('hidden');
-        
+
         if (currentUser && userProfile) {
             loadRecommendedJobs();
         } else {
@@ -137,9 +151,9 @@ async function loadAllJobs() {
             .select('*')
             .gte('application_deadline', new Date().toISOString())
             .order('posted_date', { ascending: false });
-        
+
         if (error) throw error;
-        
+
         document.getElementById('totalJobsHero').textContent = data.length;
         renderJobs(data, 'allJobs');
     } catch (error) {
@@ -150,45 +164,45 @@ async function loadAllJobs() {
 
 async function loadRecommendedJobs() {
     if (!userProfile) return;
-    
+
     document.getElementById('recommendedJobs').innerHTML = '<div class="loading">Loading your recommended jobs...</div>';
-    
+
     try {
         const { data: allJobs, error } = await supabase
             .from('jobs')
             .select('*')
             .gte('application_deadline', new Date().toISOString())
             .order('posted_date', { ascending: false });
-        
+
         if (error) throw error;
-        
+
         // Same matching logic as Flutter app
         const matched = allJobs.filter(job => {
             // 1. Age check
             if (job.min_age && userProfile.age < job.min_age) return false;
             if (job.max_age && userProfile.age > job.max_age) return false;
-            
+
             // 2. Education level check
-            const levels = {'10th': 1, '12th': 2, 'Diploma': 3, 'Degree': 4, 'Post Graduate': 5};
+            const levels = { '10th': 1, '12th': 2, 'Diploma': 3, 'Degree': 4, 'Post Graduate': 5 };
             if (levels[userProfile.education_level] < levels[job.education_required]) return false;
-            
+
             // 3. Education field check
             if (job.education_fields?.length && userProfile.education_field) {
                 if (!job.education_fields.includes(userProfile.education_field)) return false;
             }
-            
+
             // 4. Percentage check
             if (userProfile.percentage < job.min_percentage) return false;
-            
+
             // 5. Category check
             if (job.categories?.length && !job.categories.includes(userProfile.category)) return false;
-            
+
             // 6. State check
             if (job.state !== 'All India' && job.state !== userProfile.state) return false;
-            
+
             return true;
         });
-        
+
         renderJobs(matched, 'recommendedJobs');
     } catch (error) {
         console.error(error);
@@ -198,7 +212,7 @@ async function loadRecommendedJobs() {
 
 function renderJobs(jobs, containerId) {
     const container = document.getElementById(containerId);
-    
+
     if (jobs.length === 0) {
         container.innerHTML = `
             <div class="loading">
@@ -207,7 +221,7 @@ function renderJobs(jobs, containerId) {
         `;
         return;
     }
-    
+
     container.innerHTML = jobs.map(job => `
         <div class="job-card">
             <div class="job-title">${job.title}</div>
@@ -269,10 +283,10 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
     const btn = document.getElementById('authBtn');
     btn.disabled = true;
     btn.textContent = 'Please wait...';
-    
+
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    
+
     try {
         if (isLoginMode) {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -332,7 +346,7 @@ function updateFields() {
     const level = document.getElementById('educationLevel').value;
     const fieldGroup = document.getElementById('fieldGroup');
     const fieldSelect = document.getElementById('educationField');
-    
+
     if (level === '10th' || level === '12th') {
         fieldGroup.classList.add('hidden');
         fieldSelect.removeAttribute('required');
@@ -349,7 +363,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     const btn = document.getElementById('profileBtn');
     btn.disabled = true;
     btn.textContent = 'Saving...';
-    
+
     const level = document.getElementById('educationLevel').value;
     const profileData = {
         user_id: currentUser.id,
@@ -363,14 +377,14 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         category: document.getElementById('category').value,
         state: document.getElementById('state').value
     };
-    
+
     try {
         const { error } = await supabase
             .from('users_profiles')
             .upsert(profileData, { onConflict: 'user_id' });
-        
+
         if (error) throw error;
-        
+
         userProfile = profileData;
         closeProfileModal();
         updateAuthButton();
@@ -387,7 +401,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
 
 function displayProfile() {
     if (!userProfile) return;
-    
+
     document.getElementById('profileInfo').innerHTML = `
         <div class="profile-info">
             <div class="info-item">
