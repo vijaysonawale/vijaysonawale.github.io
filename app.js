@@ -5,6 +5,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let userProfile = null;
+let pinnedJobs = [];
 let isLoginMode = false;
 let currentTab = 'all';
 
@@ -23,6 +24,7 @@ async function checkAuth() {
     if (user) {
         currentUser = user;
         await loadUserProfile();
+        await loadPinnedJobs();
     }
     updateAuthButton();
     updateGetStartedButton();
@@ -42,6 +44,64 @@ async function loadUserProfile() {
         }
     } catch (error) {
         console.log('No profile found');
+    }
+}
+
+async function loadPinnedJobs() {
+    if (!currentUser) return;
+    
+    try {
+        const { data, error } = await supabase
+            .from('pinned_jobs')
+            .select('job_id')
+            .eq('user_id', currentUser.id);
+        
+        if (data) {
+            pinnedJobs = data.map(p => p.job_id);
+        }
+    } catch (error) {
+        console.log('No pinned jobs');
+    }
+}
+
+async function togglePinJob(jobId) {
+    if (!currentUser) {
+        alert('Please login to pin jobs');
+        openAuthModal();
+        return;
+    }
+    
+    try {
+        if (pinnedJobs.includes(jobId)) {
+            // Unpin
+            const { error } = await supabase
+                .from('pinned_jobs')
+                .delete()
+                .eq('user_id', currentUser.id)
+                .eq('job_id', jobId);
+            
+            if (error) throw error;
+            pinnedJobs = pinnedJobs.filter(id => id !== jobId);
+            alert('✅ Job unpinned');
+        } else {
+            // Pin
+            const { error } = await supabase
+                .from('pinned_jobs')
+                .insert([{ user_id: currentUser.id, job_id: jobId }]);
+            
+            if (error) throw error;
+            pinnedJobs.push(jobId);
+            alert('✅ Job pinned! View in your profile.');
+        }
+        
+        // Reload current view
+        if (currentTab === 'recommended') {
+            loadRecommendedJobs();
+        } else {
+            loadAllJobs();
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
     }
 }
 
@@ -66,6 +126,9 @@ function openProfileMenu() {
             <button class="btn btn-primary" onclick="showProfilePage(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px;">
                 👤 My Profile
             </button>
+            <button class="btn btn-primary" onclick="showPinnedJobs(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px; background: #ffc107; color: #333;">
+                🔖 Saved Jobs (${pinnedJobs.length})
+            </button>
             <button class="btn btn-apply" onclick="logout(); this.closest('.modal').remove();" style="width: 100%; background: #dc3545;">
                 🚪 Logout
             </button>
@@ -86,26 +149,53 @@ function updateGetStartedButton() {
     }
 }
 
-function toggleProfileDropdown() {
-    const dropdown = document.getElementById('profileDropdown');
-    if (dropdown) {
-        dropdown.classList.toggle('active');
-    }
-}
-
-document.addEventListener('touchstart', (e) => {
-    const dropdown = document.getElementById('profileDropdown');
-    const profileIcon = document.querySelector('.profile-icon');
-    if (dropdown && profileIcon && !profileIcon.contains(e.target)) {
-        dropdown.classList.remove('active');
-    }
-});
-
 function showProfilePage() {
     document.getElementById('profileSection').classList.remove('hidden');
     document.getElementById('jobs').classList.add('hidden');
+    document.getElementById('pinnedJobsSection').classList.add('hidden');
     displayProfile();
     document.getElementById('profileSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function showPinnedJobs() {
+    document.getElementById('jobs').classList.add('hidden');
+    document.getElementById('profileSection').classList.add('hidden');
+    
+    let pinnedSection = document.getElementById('pinnedJobsSection');
+    if (!pinnedSection) {
+        pinnedSection = document.createElement('div');
+        pinnedSection.id = 'pinnedJobsSection';
+        pinnedSection.className = 'container';
+       pinnedSection.innerHTML = `
+            <h2 class="section-title">🔖 My Saved Jobs</h2>
+            <div id="pinnedJobsContainer"></div>
+            <button class="btn btn-primary" onclick="showTab('all')" style="margin-top: 20px; margin-bottom: 60px;">← Back to All Jobs</button>
+        `;
+        document.getElementById('jobs').parentElement.appendChild(pinnedSection);
+    }
+    
+    pinnedSection.classList.remove('hidden');
+    
+    if (pinnedJobs.length === 0) {
+        document.getElementById('pinnedJobsContainer').innerHTML = `
+            <div class="loading">
+                <p>No pinned jobs yet. Pin jobs to save them for later!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    try {
+        const { data, error } = await supabase
+            .from('jobs')
+            .select('*')
+            .in('id', pinnedJobs);
+        
+        if (error) throw error;
+        renderJobs(data, 'pinnedJobsContainer', true);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function showTab(tab) {
@@ -114,9 +204,11 @@ function showTab(tab) {
     const tabAll = document.getElementById('tabAll');
     const recommendedSection = document.getElementById('recommendedJobsSection');
     const allSection = document.getElementById('allJobsSection');
+    const pinnedSection = document.getElementById('pinnedJobsSection');
 
     document.getElementById('jobs').classList.remove('hidden');
     document.getElementById('profileSection').classList.add('hidden');
+    if (pinnedSection) pinnedSection.classList.add('hidden');
 
     if (tab === 'recommended') {
         tabRecommended.classList.add('active');
@@ -199,7 +291,7 @@ async function loadRecommendedJobs() {
     }
 }
 
-function renderJobs(jobs, containerId) {
+function renderJobs(jobs, containerId, isPinnedView = false) {
     const container = document.getElementById(containerId);
 
     if (jobs.length === 0) {
@@ -212,19 +304,26 @@ function renderJobs(jobs, containerId) {
     }
 
     container.innerHTML = jobs.map(job => {
-        // Create SEO-friendly description
-        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage}% required. Apply before ${formatDate(job.application_deadline)}.`;
+        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage || 0}% required. Apply before ${formatDate(job.application_deadline)}.`;
         const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
+        const isPinned = pinnedJobs.includes(job.id);
         
         return `
         <article class="job-card" itemscope itemtype="https://schema.org/JobPosting">
             <meta itemprop="datePosted" content="${job.posted_date}" />
             <meta itemprop="validThrough" content="${job.application_deadline}" />
             
-            <div class="job-title" itemprop="title">
-                <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">
-                    ${job.title}
-                </a>
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div class="job-title" itemprop="title">
+                    <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">
+                        ${job.title}
+                    </a>
+                </div>
+               ${currentUser ? `
+                <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;" title="${isPinned ? 'Unsave job' : 'Save job'}">
+                    ${isPinned ? '🔖' : '📑'}
+                </button>
+                ` : ''}
             </div>
             
             <div class="job-org" itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization">
@@ -236,14 +335,18 @@ function renderJobs(jobs, containerId) {
             </div>
             
             <div class="job-meta">
-                <span>📅 Deadline: ${formatDate(job.application_deadline)}</span>
+                <span>📅 Start: ${formatDate(job.application_start_date || job.posted_date)}</span>
+                <span>⏰ Deadline: ${formatDate(job.application_deadline)}</span>
                 <span itemprop="educationRequirements">🎓 ${job.education_required}</span>
                 <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place">
                     <span itemprop="address">📍 ${job.state}</span>
                 </span>
-                ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 0}-${job.max_age || '∞'}</span>` : ''}
-                <span>📊 Min ${job.min_percentage}%</span>
+                ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 'N/A'}-${job.max_age || 'N/A'}</span>` : ''}
+                <span>📊 Min ${job.min_percentage || 0}%</span>
             </div>
+            
+            ${job.admit_card_date ? `<div style="margin: 5px 0; color: #666; font-size: 14px;">🎫 Admit Card: ${job.admit_card_date}</div>` : ''}
+            ${job.result_date ? `<div style="margin: 5px 0; color: #666; font-size: 14px;">📋 Result: ${job.result_date}</div>` : ''}
             
             ${job.education_fields?.length ? `
                 <div style="margin: 10px 0;">
@@ -251,11 +354,11 @@ function renderJobs(jobs, containerId) {
                 </div>
             ` : ''}
             
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center;">
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">
                     View Details →
                 </a>
-                <a href="${job.apply_link}" target="_blank" class="btn-apply" style="flex: 1; text-align: center; background: #28a745;">
+                <a href="${job.apply_link}" target="_blank" class="btn-apply" style="flex: 1; text-align: center; background: #28a745; min-width: 120px;">
                     Apply Now →
                 </a>
             </div>
@@ -265,6 +368,7 @@ function renderJobs(jobs, containerId) {
 }
 
 function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
@@ -309,6 +413,7 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
             if (error) throw error;
             currentUser = data.user;
             await loadUserProfile();
+            await loadPinnedJobs();
             closeAuthModal();
             updateAuthButton();
             updateGetStartedButton();
@@ -454,6 +559,10 @@ function displayProfile() {
                 <div class="info-label">Preferred State</div>
                 <div class="info-value">${userProfile.state}</div>
             </div>
+            <div class="info-item">
+                <div class="info-label">Pinned Jobs</div>
+                <div class="info-value">${pinnedJobs.length} jobs</div>
+            </div>
         </div>
     `;
 }
@@ -463,6 +572,7 @@ async function logout() {
         await supabase.auth.signOut();
         currentUser = null;
         userProfile = null;
+        pinnedJobs = [];
         updateAuthButton();
         updateGetStartedButton();
         showTab('all');

@@ -453,8 +453,20 @@
                             <td id="postedDate"></td>
                         </tr>
                         <tr>
+                            <td>Application Start Date</td>
+                            <td id="startDate"></td>
+                        </tr>
+                        <tr>
                             <td>Application Deadline</td>
                             <td id="deadlineDate"></td>
+                        </tr>
+                        <tr>
+                            <td>Admit Card Release</td>
+                            <td id="admitCardDate"></td>
+                        </tr>
+                        <tr>
+                            <td>Result Date</td>
+                            <td id="resultDateDisplay"></td>
                         </tr>
                     </table>
                 </div>
@@ -652,9 +664,12 @@
 
             // Dates
             document.getElementById('postedDate').textContent = formatDate(job.posted_date);
+            document.getElementById('startDate').textContent = formatDate(job.application_start_date || job.posted_date);
             document.getElementById('deadlineDate').textContent = formatDate(job.application_deadline);
+            document.getElementById('admitCardDate').textContent = job.admit_card_date || 'Will Be Updated Here Soon';
+            document.getElementById('resultDateDisplay').textContent = job.result_date || 'Will Be Updated Here Soon';
             document.getElementById('deadlineDisplay').textContent = formatDate(job.application_deadline);
-            document.getElementById('daysLeft').textContent = `${daysLeft} days remaining`;
+            document.getElementById('daysLeft').textContent = daysLeft > 0 ? `${daysLeft} days remaining` : 'EXPIRED';
 
             // Apply button
             document.getElementById('applyBtn').href = job.apply_link;
@@ -695,7 +710,8 @@
             }
         }
 
-        function formatDate(dateStr) {
+       function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
             const date = new Date(dateStr);
             return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
         }
