@@ -358,9 +358,6 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
                 <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">
                     View Details →
                 </a>
-                <a href="${job.apply_link}" target="_blank" class="btn-apply" style="flex: 1; text-align: center; background: #28a745; min-width: 120px;">
-                    Apply Now →
-                </a>
             </div>
         </article>
     `;
