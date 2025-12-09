@@ -8,13 +8,58 @@ let userProfile = null;
 let pinnedJobs = [];
 let isLoginMode = false;
 let currentTab = 'all';
+let educationFieldsMap = {};
+let configCategories = [];
+let configStates = [];
 
-const educationFieldsMap = {
-    'Diploma': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Engineering', 'Automobile Engineering'],
-    'Degree': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Information Technology', 'Naval Architecture', 'Marine Engineering', 'Automotive Engineering', 'Mechatronics', 'Aerospace Engineering', 'Aeronautical Engineering', 'Metallurgy', 'Industrial Engineering', 'Power Engineering'],
-    'Post Graduate': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Management']
-};
+// const educationFieldsMap = {
+//     'Diploma': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Engineering', 'Automobile Engineering'],
+//     'Degree': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Information Technology', 'Naval Architecture', 'Marine Engineering', 'Automotive Engineering', 'Mechatronics', 'Aerospace Engineering', 'Aeronautical Engineering', 'Metallurgy', 'Industrial Engineering', 'Power Engineering'],
+//     'Post Graduate': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Management']
+// };
 
+
+
+
+// Load config from database
+async function loadAppConfig() {
+    try {
+        const { data: fields } = await supabase.from('education_fields').select('*');
+        educationFieldsMap = {};
+        (fields || []).forEach(f => {
+            if (!educationFieldsMap[f.level]) educationFieldsMap[f.level] = [];
+            educationFieldsMap[f.level].push(f.field_name);
+        });
+
+        const { data: cats } = await supabase.from('categories').select('name');
+        configCategories = (cats || []).map(c => c.name);
+
+        const { data: sts } = await supabase.from('states').select('name');
+        configStates = (sts || []).map(s => s.name);
+    } catch (e) {
+        console.error('Config load error:', e);
+    }
+}
+
+// Call on page load
+loadAppConfig();
+
+// Update updateFields function to use loaded data
+function updateFields() {
+    const level = document.getElementById('educationLevel').value;
+    const fieldGroup = document.getElementById('fieldGroup');
+    const fieldSelect = document.getElementById('educationField');
+
+    if (level === '10th' || level === '12th') {
+        fieldGroup.classList.add('hidden');
+        fieldSelect.removeAttribute('required');
+    } else if (educationFieldsMap[level]) {
+        fieldGroup.classList.remove('hidden');
+        fieldSelect.setAttribute('required', 'required');
+        fieldSelect.innerHTML = '<option value="">Select Field</option>' +
+            educationFieldsMap[level].map(f => `<option value="${f}">${f}</option>`).join('');
+    }
+}
 // Initialize
 checkAuth();
 loadAllJobs();
@@ -437,17 +482,28 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
 });
 
 // Profile Modal Functions
-function openProfileModal() {
+async function openProfileModal() {
+    // Load fresh categories from DB
+    const { data: cats } = await supabase.from('categories').select('name').order('name');
+    const categoryHTML = (cats || []).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    
+    document.getElementById('category').innerHTML = categoryHTML;
+    
     document.getElementById('profileModal').classList.add('active');
     if (userProfile) {
         document.getElementById('fullName').value = userProfile.full_name;
         document.getElementById('phone').value = userProfile.phone || '';
         document.getElementById('age').value = userProfile.age;
         document.getElementById('educationLevel').value = userProfile.education_level;
+        await loadAppConfig(); // Reload config
         updateFields();
         document.getElementById('educationField').value = userProfile.education_field || '';
         document.getElementById('percentage').value = userProfile.percentage;
-        document.getElementById('category').value = userProfile.category;
+        document.getElementById('category').value = userProfile.category; // Set selected
+        
+        // Load states dynamically
+        const { data: sts } = await supabase.from('states').select('name').order('name');
+        document.getElementById('state').innerHTML = (sts || []).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
         document.getElementById('state').value = userProfile.state;
     }
 }

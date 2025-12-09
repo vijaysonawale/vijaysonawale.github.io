@@ -1,781 +1,505 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Enhanced SarkariAI</title>
+    <title>Admin - SarkariAI</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
-        }
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #eee; }
         h1 { color: #667eea; }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-        }
-        .tab-btn {
-            padding: 15px 30px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: #666;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-        }
-        .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.3s;
-        }
-        .btn:hover { opacity: 0.9; }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 5px; }
+        .btn-primary { background: #667eea; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .field-manager {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .field-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .field-item {
-            background: white;
-            padding: 8px 15px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #ddd;
-        }
-        .field-item button {
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .add-field-input {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .add-field-input input {
-            flex: 1;
-        }
-        .category-manager {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .job-card {
-            border: 2px solid #eee;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .badge {
-            background: #e7f3ff;
-            color: #004085;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: inline-block;
-            margin-right: 5px;
-        }
-        .badge.expired {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-        }
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #eee; overflow-x: auto; }
+        .tab-btn { padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 600; color: #666; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+        .tab-btn.active { color: #667eea; border-bottom-color: #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .manager-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .add-row { display: flex; gap: 10px; margin: 15px 0; }
+        .add-row input, .add-row select { flex: 1; }
+        .items-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .item-tag { background: white; padding: 10px 15px; border-radius: 6px; border: 1px solid #ddd; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .item-tag button { background: #dc3545; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 14px; }
+        .job-card { border: 2px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .badge { background: #e7f3ff; color: #004085; padding: 5px 10px; border-radius: 5px; font-size: 12px; margin-right: 5px; }
+        .badge.expired { background: #f8d7da; color: #721c24; }
+        .message { padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        .message.success { background: #d4edda; color: #155724; display: block; }
+        .message.error { background: #f8d7da; color: #721c24; display: block; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; overflow-y: auto; }
+        .modal.active { display: block; }
+        .modal-content { background: white; max-width: 900px; margin: 50px auto; border-radius: 12px; padding: 30px; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #999; }
         .hidden { display: none; }
+        @media (max-width: 768px) {
+            .row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     <div id="loginScreen" class="container" style="max-width: 400px; margin-top: 100px;">
-        <h1>🔐 Admin Login</h1>
-        <div id="loginMessage" class="message hidden"></div>
+        <h1>🔐 Admin</h1>
+        <div id="loginMessage" class="message"></div>
         <form id="loginForm">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="loginEmail" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPassword" required>
-            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div>
+            <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
         </form>
     </div>
 
     <div id="dashboard" class="container hidden">
         <div class="header">
+            <div><h1>Admin</h1><span id="adminEmail"></span></div>
             <div>
-                <h1>🛠️ Enhanced Job Management</h1>
-                <span id="adminEmail"></span>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-success" onclick="openAddJobModal()">+ Add Job</button>
-                <a href="index.html" class="btn btn-secondary">🏠 Home</a>
+                <button class="btn btn-success" onclick="openAddJobModal()">+ Job</button>
                 <button class="btn btn-danger" onclick="logout()">Logout</button>
             </div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('jobs')">📋 Jobs</button>
-            <button class="tab-btn" onclick="switchTab('fields')">🎓 Education Fields</button>
-            <button class="tab-btn" onclick="switchTab('categories')">📁 Categories</button>
-            <button class="tab-btn" onclick="switchTab('states')">📍 States</button>
+            <button class="tab-btn active" onclick="switchTab('jobs')">Jobs</button>
+            <button class="tab-btn" onclick="switchTab('levels')">Levels</button>
+            <button class="tab-btn" onclick="switchTab('fields')">Fields</button>
+            <button class="tab-btn" onclick="switchTab('cats')">Categories</button>
+            <button class="tab-btn" onclick="switchTab('states')">States</button>
         </div>
 
-        <div id="message" class="message hidden"></div>
+        <div id="message" class="message"></div>
 
-        <!-- Jobs Tab -->
         <div id="jobsTab" class="tab-content active">
-            <div style="margin-bottom: 20px;">
-                <label>
-                    <input type="checkbox" id="showExpired" onchange="loadJobs()">
-                    Show Expired Jobs
-                </label>
-            </div>
-            <div id="jobsContainer"></div>
+            <label><input type="checkbox" id="showExpired" onchange="loadJobs()"> Show Expired</label>
+            <div id="jobsContainer" style="margin-top: 20px;"></div>
         </div>
 
-        <!-- Education Fields Tab -->
+        <div id="levelsTab" class="tab-content">
+            <div class="manager-box">
+                <h3>Education Levels</h3>
+                <div class="add-row">
+                    <input type="text" id="newLevel" placeholder="Add level (e.g., ITI)">
+                    <button class="btn btn-success" onclick="addLvl()">Add</button>
+                </div>
+                <div id="lvlsDisplay" class="items-grid"></div>
+            </div>
+        </div>
+
         <div id="fieldsTab" class="tab-content">
-            <div class="field-manager">
-                <h3>Manage Education Fields</h3>
-                <p style="color: #666; margin: 10px 0;">Add new fields dynamically. They'll be available immediately in job posting.</p>
-                
-                <div class="add-field-input">
-                    <select id="fieldCategory">
-                        <option value="Diploma">Diploma</option>
-                        <option value="Degree">Degree/UG</option>
-                        <option value="Post Graduate">Post Graduate</option>
-                        <option value="General">General</option>
-                    </select>
-                    <input type="text" id="newFieldName" placeholder="Enter field name (e.g., Biotechnology)">
-                    <button class="btn btn-success" onclick="addEducationField()">+ Add</button>
+            <div class="manager-box">
+                <h3>Education Fields</h3>
+                <div class="add-row">
+                    <select id="lvlForField"></select>
+                    <input type="text" id="newFld" placeholder="Field name">
+                    <button class="btn btn-success" onclick="addFld()">Add</button>
                 </div>
-
-                <h4 style="margin-top: 30px;">Current Fields by Category:</h4>
-                <div id="fieldsDisplay"></div>
+                <div id="fldsDisplay"></div>
             </div>
         </div>
 
-        <!-- Categories Tab -->
-        <div id="categoriesTab" class="tab-content">
-            <div class="category-manager">
-                <h3>Manage Reservation Categories</h3>
-                <p style="color: #666; margin: 10px 0;">Add or remove reservation categories.</p>
-                
-                <div class="add-field-input">
-                    <input type="text" id="newCategoryName" placeholder="Enter category name (e.g., PwD, EBC)">
-                    <button class="btn btn-success" onclick="addCategory()">+ Add Category</button>
+        <div id="catsTab" class="tab-content">
+            <div class="manager-box">
+                <h3>Categories</h3>
+                <div class="add-row">
+                    <input type="text" id="newCat" placeholder="Category name">
+                    <button class="btn btn-success" onclick="addCat()">Add</button>
                 </div>
-
-                <h4 style="margin-top: 20px;">Current Categories:</h4>
-                <div id="categoriesDisplay" class="field-list"></div>
+                <div id="catsDisplay" class="items-grid"></div>
             </div>
         </div>
 
-        <!-- States Tab -->
         <div id="statesTab" class="tab-content">
-            <div class="category-manager">
-                <h3>Manage States</h3>
-                <p style="color: #666; margin: 10px 0;">Add missing states/UTs.</p>
-                
-                <div class="add-field-input">
-                    <input type="text" id="newStateName" placeholder="Enter state/UT name">
-                    <button class="btn btn-success" onclick="addState()">+ Add State</button>
+            <div class="manager-box">
+                <h3>States</h3>
+                <div class="add-row">
+                    <input type="text" id="newState" placeholder="State name">
+                    <button class="btn btn-success" onclick="addSt()">Add</button>
                 </div>
-
-                <h4 style="margin-top: 20px;">Current States:</h4>
-                <div id="statesDisplay" class="field-list"></div>
+                <div id="stsDisplay" class="items-grid"></div>
             </div>
         </div>
     </div>
 
-    <!-- Enhanced Job Modal -->
-    <div id="jobModal" class="modal hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; overflow-y: auto; display: none;">
-        <div style="background: white; max-width: 900px; margin: 50px auto; border-radius: 12px; padding: 30px; position: relative;">
-            <span style="position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #999;" onclick="closeJobModal()">&times;</span>
-            <h2 id="modalTitle">Add New Job</h2>
-            
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeJobModal()">&times;</span>
+            <h2 id="modalTitle">Add Job</h2>
             <form id="jobForm">
                 <input type="hidden" id="jobId">
-                
-                <div class="form-group">
-                    <label>Job Title *</label>
-                    <input type="text" id="title" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Organization *</label>
-                    <input type="text" id="organization" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Post Name *</label>
-                    <input type="text" id="postName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="description" rows="3"></textarea>
-                </div>
-                
+                <div class="form-group"><label>Title *</label><input type="text" id="title" required></div>
+                <div class="form-group"><label>Organization *</label><input type="text" id="organization" required></div>
+                <div class="form-group"><label>Post *</label><input type="text" id="postName" required></div>
+                <div class="form-group"><label>Description</label><textarea id="description" rows="2"></textarea></div>
                 <div class="row">
-                    <div class="form-group">
-                        <label>Min Age</label>
-                        <input type="number" id="minAge" placeholder="Leave empty for N/A">
-                    </div>
-                    <div class="form-group">
-                        <label>Max Age</label>
-                        <input type="number" id="maxAge" placeholder="Leave empty for N/A">
-                    </div>
+                    <div class="form-group"><label>Min Age</label><input type="number" id="minAge"></div>
+                    <div class="form-group"><label>Max Age</label><input type="number" id="maxAge"></div>
                 </div>
-                
+                <div class="form-group"><label>Education *</label><select id="eduReq" required onchange="updFlds()"></select></div>
                 <div class="form-group">
-                    <label>Education Required *</label>
-                    <select id="educationRequired" required onchange="updateFieldsDropdown()">
-                        <option value="">Select</option>
-                        <option value="10th">10th</option>
-                        <option value="12th">12th</option>
-                        <option value="Diploma">Diploma</option>
-                        <option value="Degree">Degree</option>
-                        <option value="Post Graduate">Post Graduate</option>
-                    </select>
+                    <label>Fields</label>
+                    <select id="fldInput"></select>
+                    <button type="button" class="btn btn-success" onclick="addJobFld()">Add</button>
+                    <div id="fldsCont" class="items-grid" style="margin-top: 10px;"></div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Education Fields</label>
-                    <select id="fieldInput">
-                        <option value="">Select field to add</option>
-                    </select>
-                    <button type="button" class="btn btn-success" style="margin-top: 5px;" onclick="addJobField()">+ Add</button>
-                    <div id="fieldsContainer" class="field-list" style="margin-top: 10px;"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Minimum Percentage *</label>
-                    <input type="number" id="minPercentage" required min="0" max="100" step="0.01" placeholder="Enter 0 for N/A">
-                </div>
-                
-                <div class="form-group">
-                    <label>Additional Requirements</label>
-                    <textarea id="additionalRequirements" rows="2" placeholder="Leave empty for N/A"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Eligible Categories</label>
-                    <div id="categoriesCheckboxes" style="margin-top: 10px;"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label>State *</label>
-                    <select id="state" required></select>
-                </div>
-
-                <h3 style="color: #667eea; margin: 30px 0 20px;">Important Dates</h3>
-                
+                <div class="form-group"><label>Min % *</label><input type="number" id="minPct" required min="0" max="100" step="0.01"></div>
+                <div class="form-group"><label>Additional</label><textarea id="addReq" rows="2"></textarea></div>
+                <div class="form-group"><label>Categories</label><div id="catsCb"></div></div>
+                <div class="form-group"><label>State *</label><select id="stateSel" required></select></div>
+                <h3 style="color: #667eea; margin: 20px 0;">Dates</h3>
                 <div class="row">
-                    <div class="form-group">
-                        <label>Application Start Date *</label>
-                        <input type="date" id="startDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Application Deadline *</label>
-                        <input type="date" id="deadline" required>
-                    </div>
+                    <div class="form-group"><label>Start *</label><input type="date" id="startDt" required></div>
+                    <div class="form-group"><label>Deadline *</label><input type="date" id="deadDt" required></div>
                 </div>
-
                 <div class="row">
-                    <div class="form-group">
-                        <label>Admit Card Release</label>
-                        <input type="text" id="admitCard" placeholder="Will be updated or enter date">
-                    </div>
-                    <div class="form-group">
-                        <label>Result Date</label>
-                        <input type="text" id="resultDate" placeholder="Will be updated or enter date">
-                    </div>
+                    <div class="form-group"><label>Admit Card</label><input type="text" id="admitDt"></div>
+                    <div class="form-group"><label>Result</label><input type="text" id="resDt"></div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Apply Link *</label>
-                    <input type="url" id="applyLink" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Job</button>
+                <div class="form-group"><label>Link *</label><input type="url" id="link" required></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save</button>
             </form>
         </div>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://zayqemanhzjgjyxwmbnt.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheXFlbWFuaHpqZ2p5eHdtYm50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MDAxMDMsImV4cCI6MjA4MDQ3NjEwM30.xjV-PCNhj3_GCs4q8GoojI3b3yhjgEd1CyGgWpJQP7o';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const ADMIN_EMAILS = ['sonawalesvijay@gmail.com'];
-        
-        let educationFieldsMap = {
-            'Diploma': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Engineering', 'Automobile Engineering'],
-            'Degree': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Information Technology'],
-            'Post Graduate': ['Management'],
-            'General': ['Science', 'Commerce', 'Arts']
-        };
-        
-        let categories = ['General', 'OBC', 'SC', 'ST', 'EWS'];
-        let states = ['All India', 'Delhi', 'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Uttar Pradesh', 'West Bengal', 'Gujarat'];
-        let selectedFields = [];
-        let isEditMode = false;
+        const sb = window.supabase.createClient('https://zayqemanhzjgjyxwmbnt.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheXFlbWFuaHpqZ2p5eHdtYm50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5MDAxMDMsImV4cCI6MjA4MDQ3NjEwM30.xjV-PCNhj3_GCs4q8GoojI3b3yhjgEd1CyGgWpJQP7o');
+        const ADM = ['sonawalesvijay@gmail.com'];
+        let selFlds = [], isEdit = false;
 
-        // Initialize
         checkAuth();
 
         async function checkAuth() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user && ADMIN_EMAILS.includes(user.email)) {
-                showDashboard(user);
-            } else {
-                document.getElementById('loginScreen').classList.remove('hidden');
-            }
+            const { data: { user } } = await sb.auth.getUser();
+            if (user && ADM.includes(user.email)) showDash(user);
+            else document.getElementById('loginScreen').classList.remove('hidden');
         }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await sb.auth.signInWithPassword({
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                });
                 if (error) throw error;
-                if (!ADMIN_EMAILS.includes(data.user.email)) {
-                    throw new Error('Access Denied! Only authorized admins.');
-                }
-                showDashboard(data.user);
-            } catch (error) {
-                showMessage(error.message, 'error', 'loginMessage');
+                if (!ADM.includes(data.user.email)) throw new Error('Access Denied');
+                showDash(data.user);
+            } catch (e) {
+                msg(e.message, 'error', 'loginMessage');
             }
         });
 
-        function showDashboard(user) {
+        function showDash(u) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('adminEmail').textContent = '👤 ' + user.email;
+            document.getElementById('adminEmail').textContent = u.email;
             loadJobs();
-            loadFieldsDisplay();
-            loadCategoriesDisplay();
-            loadStatesDisplay();
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             event.target.classList.add('active');
-            document.getElementById(tab + 'Tab').classList.add('active');
+            document.getElementById(t + 'Tab').classList.add('active');
+            if (t === 'levels') loadLvls();
+            if (t === 'fields') loadFlds();
+            if (t === 'cats') loadCats();
+            if (t === 'states') loadSts();
+        }
+
+        async function loadLvls() {
+            const { data } = await sb.from('education_levels').select('*').order('name');
+            document.getElementById('lvlsDisplay').innerHTML = (data || []).map(l => 
+                `<div class="item-tag">${l.name}<button onclick="delLvl('${l.name}')">×</button></div>`
+            ).join('');
+        }
+
+        async function addLvl() {
+            const n = document.getElementById('newLevel').value.trim();
+            if (!n) return;
+            const { error } = await sb.from('education_levels').insert([{ name: n }]);
+            if (!error) {
+                document.getElementById('newLevel').value = '';
+                loadLvls();
+                msg('✅ Added', 'success');
+            }
+        }
+
+        async function delLvl(n) {
+            if (!confirm('Delete?')) return;
+            await sb.from('education_levels').delete().eq('name', n);
+            await sb.from('education_fields').delete().eq('level', n);
+            loadLvls();
+            msg('✅ Deleted', 'success');
+        }
+
+        async function loadFlds() {
+            const { data: lvls } = await sb.from('education_levels').select('name').order('name');
+            document.getElementById('lvlForField').innerHTML = (lvls || []).map(l => 
+                `<option value="${l.name}">${l.name}</option>`
+            ).join('');
+            
+            const { data: flds } = await sb.from('education_fields').select('*').order('level, field_name');
+            const grouped = {};
+            (flds || []).forEach(f => {
+                if (!grouped[f.level]) grouped[f.level] = [];
+                grouped[f.level].push(f);
+            });
+            
+            document.getElementById('fldsDisplay').innerHTML = Object.entries(grouped).map(([lvl, fs]) => `
+                <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 8px;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">${lvl}</h4>
+                    <div class="items-grid">
+                        ${fs.map(f => `<div class="item-tag">${f.field_name}<button onclick="delFld('${f.id}')">×</button></div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function addFld() {
+            const lvl = document.getElementById('lvlForField').value;
+            const n = document.getElementById('newFld').value.trim();
+            if (!n) return;
+            const { error } = await sb.from('education_fields').insert([{ level: lvl, field_name: n }]);
+            if (!error) {
+                document.getElementById('newFld').value = '';
+                loadFlds();
+                msg('✅ Added', 'success');
+            }
+        }
+
+        async function delFld(id) {
+            if (!confirm('Delete?')) return;
+            await sb.from('education_fields').delete().eq('id', id);
+            loadFlds();
+            msg('✅ Deleted', 'success');
+        }
+
+        async function loadCats() {
+            const { data } = await sb.from('categories').select('*').order('name');
+            document.getElementById('catsDisplay').innerHTML = (data || []).map(c => 
+                `<div class="item-tag">${c.name}<button onclick="delCat('${c.name}')">×</button></div>`
+            ).join('');
+        }
+
+        async function addCat() {
+            const n = document.getElementById('newCat').value.trim();
+            if (!n) return;
+            const { error } = await sb.from('categories').insert([{ name: n }]);
+            if (!error) {
+                document.getElementById('newCat').value = '';
+                loadCats();
+                msg('✅ Added', 'success');
+            }
+        }
+
+        async function delCat(n) {
+            if (!confirm('Delete?')) return;
+            await sb.from('categories').delete().eq('name', n);
+            loadCats();
+            msg('✅ Deleted', 'success');
+        }
+
+        async function loadSts() {
+            const { data } = await sb.from('states').select('*').order('name');
+            document.getElementById('stsDisplay').innerHTML = (data || []).map(s => 
+                `<div class="item-tag">${s.name}<button onclick="delSt('${s.name}')">×</button></div>`
+            ).join('');
+        }
+
+        async function addSt() {
+            const n = document.getElementById('newState').value.trim();
+            if (!n) return;
+            const { error } = await sb.from('states').insert([{ name: n }]);
+            if (!error) {
+                document.getElementById('newState').value = '';
+                loadSts();
+                msg('✅ Added', 'success');
+            }
+        }
+
+        async function delSt(n) {
+            if (!confirm('Delete?')) return;
+            await sb.from('states').delete().eq('name', n);
+            loadSts();
+            msg('✅ Deleted', 'success');
         }
 
         async function loadJobs() {
-            const showExpired = document.getElementById('showExpired').checked;
-            try {
-                let query = supabase.from('jobs').select('*').order('posted_date', { ascending: false });
-                
-                if (!showExpired) {
-                    query = query.gte('application_deadline', new Date().toISOString());
-                }
-                
-                const { data, error } = await query;
-                if (error) throw error;
-                
-                renderJobs(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        function renderJobs(jobs) {
-            const container = document.getElementById('jobsContainer');
-            if (!jobs.length) {
-                container.innerHTML = '<p>No jobs found</p>';
-                return;
-            }
-            
-            container.innerHTML = jobs.map(job => {
-                const isExpired = new Date(job.application_deadline) < new Date();
+            let q = sb.from('jobs').select('*').order('posted_date', { ascending: false });
+            if (!document.getElementById('showExpired').checked) 
+                q = q.gte('application_deadline', new Date().toISOString());
+            const { data } = await q;
+            const c = document.getElementById('jobsContainer');
+            if (!data || !data.length) { c.innerHTML = '<p>No jobs</p>'; return; }
+            c.innerHTML = data.map(j => {
+                const exp = new Date(j.application_deadline) < new Date();
                 return `
                     <div class="job-card">
-                        <h3 style="color: #667eea;">${job.title}</h3>
-                        <p style="color: #666;">${job.organization} • ${job.post_name}</p>
-                        ${isExpired ? '<span class="badge expired">EXPIRED</span>' : '<span class="badge">ACTIVE</span>'}
-                        <p style="margin-top: 10px;"><strong>Start:</strong> ${formatDate(job.application_start_date || job.posted_date)}</p>
-                        <p><strong>Deadline:</strong> ${formatDate(job.application_deadline)}</p>
-                        <p><strong>Admit Card:</strong> ${job.admit_card_date || 'Will be updated'}</p>
-                        <p><strong>Result:</strong> ${job.result_date || 'Will be updated'}</p>
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button class="btn btn-secondary" onclick='editJob(${JSON.stringify(job)})'>✏️ Edit</button>
-                            <button class="btn btn-danger" onclick="deleteJob('${job.id}')">🗑️ Delete</button>
+                        <h3 style="color: #667eea;">${j.title}</h3>
+                        <p>${j.organization} • ${j.post_name}</p>
+                        ${exp ? '<span class="badge expired">EXPIRED</span>' : '<span class="badge">ACTIVE</span>'}
+                        <p style="margin-top: 10px;"><b>Start:</b> ${fd(j.application_start_date || j.posted_date)}</p>
+                        <p><b>Deadline:</b> ${fd(j.application_deadline)}</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick='editJob(${JSON.stringify(j).replace(/'/g, "\\'")})'> Edit</button>
+                            <button class="btn btn-danger" onclick="delJob('${j.id}')">Delete</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return 'N/A';
-            return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        }
+        function fd(d) { return d ? new Date(d).toLocaleDateString('en-IN') : 'N/A'; }
 
-        // Education Fields Management
-        function addEducationField() {
-            const category = document.getElementById('fieldCategory').value;
-            const fieldName = document.getElementById('newFieldName').value.trim();
-            
-            if (!fieldName) {
-                alert('Please enter field name');
-                return;
-            }
-            
-            if (!educationFieldsMap[category]) {
-                educationFieldsMap[category] = [];
-            }
-            
-            if (!educationFieldsMap[category].includes(fieldName)) {
-                educationFieldsMap[category].push(fieldName);
-                document.getElementById('newFieldName').value = '';
-                loadFieldsDisplay();
-                showMessage(`✅ Added "${fieldName}" to ${category}`, 'success');
-            } else {
-                alert('This field already exists in this category');
-            }
-        }
-
-        function loadFieldsDisplay() {
-            const container = document.getElementById('fieldsDisplay');
-            container.innerHTML = Object.entries(educationFieldsMap).map(([category, fields]) => `
-                <div style="margin: 20px 0; padding: 15px; background: white; border-radius: 8px;">
-                    <h4 style="color: #667eea; margin-bottom: 10px;">${category}</h4>
-                    <div class="field-list">
-                        ${fields.map(field => `
-                            <div class="field-item">
-                                ${field}
-                                <button onclick="removeEducationField('${category}', '${field}')">×</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function removeEducationField(category, field) {
-            if (confirm(`Remove "${field}" from ${category}?`)) {
-                educationFieldsMap[category] = educationFieldsMap[category].filter(f => f !== field);
-                loadFieldsDisplay();
-                showMessage(`✅ Removed "${field}"`, 'success');
-            }
-        }
-
-        // Categories Management
-        function addCategory() {
-            const name = document.getElementById('newCategoryName').value.trim();
-            if (name && !categories.includes(name)) {
-                categories.push(name);
-                document.getElementById('newCategoryName').value = '';
-                loadCategoriesDisplay();
-                showMessage(`✅ Added category "${name}"`, 'success');
-            }
-        }
-
-        function loadCategoriesDisplay() {
-            document.getElementById('categoriesDisplay').innerHTML = categories.map(cat => `
-                <div class="field-item">
-                    ${cat}
-                    <button onclick="removeCategory('${cat}')">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeCategory(cat) {
-            if (confirm(`Remove category "${cat}"?`)) {
-                categories = categories.filter(c => c !== cat);
-                loadCategoriesDisplay();
-                showMessage(`✅ Removed category "${cat}"`, 'success');
-            }
-        }
-
-        // States Management
-        function addState() {
-            const name = document.getElementById('newStateName').value.trim();
-            if (name && !states.includes(name)) {
-                states.push(name);
-                document.getElementById('newStateName').value = '';
-                loadStatesDisplay();
-                showMessage(`✅ Added state "${name}"`, 'success');
-            }
-        }
-
-        function loadStatesDisplay() {
-            document.getElementById('statesDisplay').innerHTML = states.map(state => `
-                <div class="field-item">
-                    ${state}
-                    <button onclick="removeState('${state}')">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeState(state) {
-            if (confirm(`Remove state "${state}"?`)) {
-                states = states.filter(s => s !== state);
-                loadStatesDisplay();
-                showMessage(`✅ Removed state "${state}"`, 'success');
-            }
-        }
-
-        // Job Management
-        function openAddJobModal() {
-            isEditMode = false;
-            document.getElementById('modalTitle').textContent = 'Add New Job';
+        async function openAddJobModal() {
+            isEdit = false;
+            document.getElementById('modalTitle').textContent = 'Add Job';
             document.getElementById('jobForm').reset();
-            selectedFields = [];
-            populateModalDropdowns();
-            document.getElementById('jobModal').style.display = 'block';
+            selFlds = [];
+            await popMdl();
+            document.getElementById('jobModal').classList.add('active');
         }
 
         function closeJobModal() {
-            document.getElementById('jobModal').style.display = 'none';
+            document.getElementById('jobModal').classList.remove('active');
         }
 
-        function populateModalDropdowns() {
-            // States
-            document.getElementById('state').innerHTML = states.map(s => 
-                `<option value="${s}">${s}</option>`
+        async function popMdl() {
+            const { data: lvls } = await sb.from('education_levels').select('name').order('name');
+            document.getElementById('eduReq').innerHTML = (lvls || []).map(l => 
+                `<option value="${l.name}">${l.name}</option>`
             ).join('');
             
-            // Categories
-            document.getElementById('categoriesCheckboxes').innerHTML = categories.map(cat => 
-                `<label style="margin-right: 15px;">
-                    <input type="checkbox" value="${cat}" class="category-check"> ${cat}
-                </label>`
+            const { data: sts } = await sb.from('states').select('name').order('name');
+            document.getElementById('stateSel').innerHTML = (sts || []).map(s => 
+                `<option value="${s.name}">${s.name}</option>`
             ).join('');
             
-            updateFieldsDropdown();
-        }
-
-        function updateFieldsDropdown() {
-            const level = document.getElementById('educationRequired').value;
-            const fields = educationFieldsMap[level] || [];
+            const { data: cats } = await sb.from('categories').select('name').order('name');
+            document.getElementById('catsCb').innerHTML = (cats || []).map(c => 
+                `<label style="margin-right: 15px;"><input type="checkbox" value="${c.name}" class="cat-cb"> ${c.name}</label>`
+            ).join('');
             
-            document.getElementById('fieldInput').innerHTML = 
-                '<option value="">Select field to add</option>' +
-                fields.map(f => `<option value="${f}">${f}</option>`).join('');
+            await updFlds();
         }
 
-        function addJobField() {
-            const field = document.getElementById('fieldInput').value;
-            if (field && !selectedFields.includes(field)) {
-                selectedFields.push(field);
-                renderJobFields();
-                document.getElementById('fieldInput').value = '';
+        async function updFlds() {
+            const lvl = document.getElementById('eduReq').value;
+            const { data } = await sb.from('education_fields').select('field_name').eq('level', lvl).order('field_name');
+            document.getElementById('fldInput').innerHTML = 
+                '<option value="">Select</option>' + 
+                (data || []).map(f => `<option value="${f.field_name}">${f.field_name}</option>`).join('');
+        }
+
+        function addJobFld() {
+            const f = document.getElementById('fldInput').value;
+            if (f && !selFlds.includes(f)) {
+                selFlds.push(f);
+                document.getElementById('fldsCont').innerHTML = selFlds.map(x => 
+                    `<div class="item-tag">${x}<button type="button" onclick="rmFld('${x}')">×</button></div>`
+                ).join('');
             }
         }
 
-        function renderJobFields() {
-            document.getElementById('fieldsContainer').innerHTML = selectedFields.map(field => `
-                <div class="field-item">
-                    ${field}
-                    <button onclick="removeJobField('${field}')">×</button>
-                </div>
-            `).join('');
+        function rmFld(f) {
+            selFlds = selFlds.filter(x => x !== f);
+            document.getElementById('fldsCont').innerHTML = selFlds.map(x => 
+                `<div class="item-tag">${x}<button type="button" onclick="rmFld('${x}')">×</button></div>`
+            ).join('');
         }
 
-        function removeJobField(field) {
-            selectedFields = selectedFields.filter(f => f !== field);
-            renderJobFields();
-        }
-
-        function editJob(job) {
-            isEditMode = true;
-            document.getElementById('modalTitle').textContent = 'Edit Job';
-            document.getElementById('jobId').value = job.id;
-            document.getElementById('title').value = job.title;
-            document.getElementById('organization').value = job.organization;
-            document.getElementById('postName').value = job.post_name;
-            document.getElementById('description').value = job.description || '';
-            document.getElementById('minAge').value = job.min_age || '';
-            document.getElementById('maxAge').value = job.max_age || '';
-            document.getElementById('educationRequired').value = job.education_required;
-            selectedFields = job.education_fields || [];
-            document.getElementById('minPercentage').value = job.min_percentage;
-            document.getElementById('additionalRequirements').value = job.additional_requirements || '';
-            document.getElementById('state').value = job.state;
-            document.getElementById('startDate').value = (job.application_start_date || job.posted_date).split('T')[0];
-            document.getElementById('deadline').value = job.application_deadline.split('T')[0];
-            document.getElementById('admitCard').value = job.admit_card_date || '';
-            document.getElementById('resultDate').value = job.result_date || '';
-            document.getElementById('applyLink').value = job.apply_link;
-            
-            populateModalDropdowns();
-            updateFieldsDropdown();
-            renderJobFields();
-            
-            document.querySelectorAll('.category-check').forEach(cb => {
-                cb.checked = job.categories?.includes(cb.value);
+        async function editJob(j) {
+            isEdit = true;
+            document.getElementById('modalTitle').textContent = 'Edit';
+            document.getElementById('jobId').value = j.id;
+            document.getElementById('title').value = j.title;
+            document.getElementById('organization').value = j.organization;
+            document.getElementById('postName').value = j.post_name;
+            document.getElementById('description').value = j.description || '';
+            document.getElementById('minAge').value = j.min_age || '';
+            document.getElementById('maxAge').value = j.max_age || '';
+            document.getElementById('minPct').value = j.min_percentage;
+            document.getElementById('addReq').value = j.additional_requirements || '';
+            document.getElementById('startDt').value = (j.application_start_date || j.posted_date).split('T')[0];
+            document.getElementById('deadDt').value = j.application_deadline.split('T')[0];
+            document.getElementById('admitDt').value = j.admit_card_date || '';
+            document.getElementById('resDt').value = j.result_date || '';
+            document.getElementById('link').value = j.apply_link;
+            selFlds = j.education_fields || [];
+            await popMdl();
+            document.getElementById('eduReq').value = j.education_required;
+            await updFlds();
+            document.getElementById('stateSel').value = j.state;
+            document.getElementById('fldsCont').innerHTML = selFlds.map(x => 
+                `<div class="item-tag">${x}<button type="button" onclick="rmFld('${x}')">×</button></div>`
+            ).join('');
+            document.querySelectorAll('.cat-cb').forEach(cb => {
+                cb.checked = j.categories?.includes(cb.value);
             });
-            
-            document.getElementById('jobModal').style.display = 'block';
+            document.getElementById('jobModal').classList.add('active');
         }
 
         document.getElementById('jobForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const selectedCategories = Array.from(document.querySelectorAll('.category-check:checked'))
-                .map(cb => cb.value);
-            
-            const jobData = {
+            const cats = Array.from(document.querySelectorAll('.cat-cb:checked')).map(c => c.value);
+            const d = {
                 title: document.getElementById('title').value,
                 organization: document.getElementById('organization').value,
                 post_name: document.getElementById('postName').value,
                 description: document.getElementById('description').value || null,
                 min_age: document.getElementById('minAge').value || null,
                 max_age: document.getElementById('maxAge').value || null,
-                education_required: document.getElementById('educationRequired').value,
-                education_fields: selectedFields,
-                min_percentage: parseFloat(document.getElementById('minPercentage').value) || 0,
-                additional_requirements: document.getElementById('additionalRequirements').value || null,
-                categories: selectedCategories,
-                state: document.getElementById('state').value,
-                application_start_date: document.getElementById('startDate').value,
-                application_deadline: document.getElementById('deadline').value,
-                admit_card_date: document.getElementById('admitCard').value || null,
-                result_date: document.getElementById('resultDate').value || null,
-                apply_link: document.getElementById('applyLink').value
+                education_required: document.getElementById('eduReq').value,
+                education_fields: selFlds,
+                min_percentage: parseFloat(document.getElementById('minPct').value) || 0,
+                additional_requirements: document.getElementById('addReq').value || null,
+                categories: cats,
+                state: document.getElementById('stateSel').value,
+                application_start_date: document.getElementById('startDt').value,
+                application_deadline: document.getElementById('deadDt').value,
+                admit_card_date: document.getElementById('admitDt').value || null,
+                result_date: document.getElementById('resDt').value || null,
+                apply_link: document.getElementById('link').value
             };
-            
             try {
-                if (isEditMode) {
-                    const jobId = document.getElementById('jobId').value;
-                    const { error } = await supabase.from('jobs').update(jobData).eq('id', jobId);
+                if (isEdit) {
+                    const { error } = await sb.from('jobs').update(d).eq('id', document.getElementById('jobId').value);
                     if (error) throw error;
-                    showMessage('✅ Job updated!', 'success');
                 } else {
-                    const { error } = await supabase.from('jobs').insert([jobData]);
+                    const { error } = await sb.from('jobs').insert([d]);
                     if (error) throw error;
-                    showMessage('✅ Job added!', 'success');
                 }
                 closeJobModal();
                 loadJobs();
-            } catch (error) {
-                showMessage('❌ Error: ' + error.message, 'error');
+                msg('✅ Saved', 'success');
+            } catch (e) {
+                msg('❌ ' + e.message, 'error');
             }
         });
 
-        async function deleteJob(jobId) {
+        async function delJob(id) {
             if (!confirm('Delete?')) return;
-            const { error } = await supabase.from('jobs').delete().eq('id', jobId);
-            if (!error) showMessage('✅ Deleted', 'success');
+            await sb.from('jobs').delete().eq('id', id);
             loadJobs();
+            msg('✅ Deleted', 'success');
         }
 
-        function showMessage(text, type, elementId = 'message') {
-            const msg = document.getElementById(elementId);
-            msg.textContent = text;
-            msg.className = `message ${type}`;
-            msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 5000);
+        function msg(t, ty, id = 'message') {
+            const m = document.getElementById(id);
+            m.textContent = t;
+            m.className = `message ${ty}`;
+            setTimeout(() => m.className = 'message', 5000);
         }
 
         async function logout() {
-            await supabase.auth.signOut();
+            await sb.auth.signOut();
             location.reload();
         }
     </script>
