@@ -11,19 +11,13 @@ let currentTab = 'all';
 let educationFieldsMap = {};
 let configCategories = [];
 let configStates = [];
+let educationLevels = [];
 
-// const educationFieldsMap = {
-//     'Diploma': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Engineering', 'Automobile Engineering'],
-//     'Degree': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Information Technology', 'Naval Architecture', 'Marine Engineering', 'Automotive Engineering', 'Mechatronics', 'Aerospace Engineering', 'Aeronautical Engineering', 'Metallurgy', 'Industrial Engineering', 'Power Engineering'],
-//     'Post Graduate': ['Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Computer Science', 'Management']
-// };
-
-
-
-
-// Load config from database
 async function loadAppConfig() {
     try {
+        const { data: levels } = await supabase.from('education_levels').select('*').order('name');
+        educationLevels = (levels || []).map(l => l.name);
+        
         const { data: fields } = await supabase.from('education_fields').select('*');
         educationFieldsMap = {};
         (fields || []).forEach(f => {
@@ -41,10 +35,8 @@ async function loadAppConfig() {
     }
 }
 
-// Call on page load
 loadAppConfig();
 
-// Update updateFields function to use loaded data
 function updateFields() {
     const level = document.getElementById('educationLevel').value;
     const fieldGroup = document.getElementById('fieldGroup');
@@ -60,7 +52,7 @@ function updateFields() {
             educationFieldsMap[level].map(f => `<option value="${f}">${f}</option>`).join('');
     }
 }
-// Initialize
+
 checkAuth();
 loadAllJobs();
 
@@ -118,7 +110,6 @@ async function togglePinJob(jobId) {
     
     try {
         if (pinnedJobs.includes(jobId)) {
-            // Unpin
             const { error } = await supabase
                 .from('pinned_jobs')
                 .delete()
@@ -129,7 +120,6 @@ async function togglePinJob(jobId) {
             pinnedJobs = pinnedJobs.filter(id => id !== jobId);
             alert('✅ Job unpinned');
         } else {
-            // Pin
             const { error } = await supabase
                 .from('pinned_jobs')
                 .insert([{ user_id: currentUser.id, job_id: jobId }]);
@@ -139,7 +129,6 @@ async function togglePinJob(jobId) {
             alert('✅ Job pinned! View in your profile.');
         }
         
-        // Reload current view
         if (currentTab === 'recommended') {
             loadRecommendedJobs();
         } else {
@@ -153,9 +142,7 @@ async function togglePinJob(jobId) {
 function updateAuthButton() {
     const btn = document.getElementById('authButton');
     if (currentUser && userProfile) {
-        btn.innerHTML = `
-            <div class="profile-icon" onclick="openProfileMenu()">👤</div>
-        `;
+        btn.innerHTML = `<div class="profile-icon" onclick="openProfileMenu()">👤</div>`;
     } else {
         btn.innerHTML = '<button class="btn btn-primary" onclick="openAuthModal()">Login / Sign Up</button>';
     }
@@ -168,15 +155,9 @@ function openProfileMenu() {
         <div class="modal-content" style="max-width: 300px;">
             <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
             <h2 style="margin-bottom: 20px;">Profile Menu</h2>
-            <button class="btn btn-primary" onclick="showProfilePage(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px;">
-                👤 My Profile
-            </button>
-            <button class="btn btn-primary" onclick="showPinnedJobs(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px; background: #ffc107; color: #333;">
-                🔖 Saved Jobs (${pinnedJobs.length})
-            </button>
-            <button class="btn btn-apply" onclick="logout(); this.closest('.modal').remove();" style="width: 100%; background: #dc3545;">
-                🚪 Logout
-            </button>
+            <button class="btn btn-primary" onclick="showProfilePage(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px;">👤 My Profile</button>
+            <button class="btn btn-primary" onclick="showPinnedJobs(); this.closest('.modal').remove();" style="width: 100%; margin-bottom: 10px; background: #ffc107; color: #333;">📌 Saved Jobs (${pinnedJobs.length})</button>
+            <button class="btn btn-apply" onclick="logout(); this.closest('.modal').remove();" style="width: 100%; background: #dc3545;">🚪 Logout</button>
         </div>
     `;
     document.body.appendChild(modal);
@@ -197,7 +178,8 @@ function updateGetStartedButton() {
 function showProfilePage() {
     document.getElementById('profileSection').classList.remove('hidden');
     document.getElementById('jobs').classList.add('hidden');
-    document.getElementById('pinnedJobsSection').classList.add('hidden');
+    const pinnedSection = document.getElementById('pinnedJobsSection');
+    if (pinnedSection) pinnedSection.classList.add('hidden');
     displayProfile();
     document.getElementById('profileSection').scrollIntoView({ behavior: 'smooth' });
 }
@@ -211,21 +193,20 @@ async function showPinnedJobs() {
         pinnedSection = document.createElement('div');
         pinnedSection.id = 'pinnedJobsSection';
         pinnedSection.className = 'container';
-       pinnedSection.innerHTML = `
-            <h2 class="section-title">🔖 My Saved Jobs</h2>
+        pinnedSection.innerHTML = `
+            <h2 class="section-title">📌 My Saved Jobs</h2>
             <div id="pinnedJobsContainer"></div>
             <button class="btn btn-primary" onclick="showTab('all')" style="margin-top: 20px; margin-bottom: 60px;">← Back to All Jobs</button>
         `;
-        document.getElementById('jobs').parentElement.appendChild(pinnedSection);
+        document.getElementById('jobs').parentElement.insertBefore(pinnedSection, document.getElementById('jobs').nextSibling);
     }
     
     pinnedSection.classList.remove('hidden');
+    pinnedSection.scrollIntoView({ behavior: 'smooth' });
     
     if (pinnedJobs.length === 0) {
         document.getElementById('pinnedJobsContainer').innerHTML = `
-            <div class="loading">
-                <p>No pinned jobs yet. Pin jobs to save them for later!</p>
-            </div>
+            <div class="loading"><p>No pinned jobs yet. Pin jobs to save them for later!</p></div>
         `;
         return;
     }
@@ -309,12 +290,23 @@ async function loadRecommendedJobs() {
 
         if (error) throw error;
 
+        const educationLevelHierarchy = {
+            '10th': 1,
+            '12th': 2,
+            'ITI': 3,
+            'Diploma': 4,
+            'Degree': 5,
+            'B.Ed': 5,
+            'Post Graduate': 6
+        };
+
         const matched = allJobs.filter(job => {
             if (job.min_age && userProfile.age < job.min_age) return false;
             if (job.max_age && userProfile.age > job.max_age) return false;
 
-            const levels = { '10th': 1, '12th': 2, 'Diploma': 3, 'Degree': 4, 'Post Graduate': 5 };
-            if (levels[userProfile.education_level] < levels[job.education_required]) return false;
+            const userLevel = educationLevelHierarchy[userProfile.education_level] || 0;
+            const jobLevel = educationLevelHierarchy[job.education_required] || 0;
+            if (userLevel < jobLevel) return false;
 
             if (job.education_fields?.length && userProfile.education_field) {
                 if (!job.education_fields.includes(userProfile.education_field)) return false;
@@ -349,7 +341,7 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
     }
 
     container.innerHTML = jobs.map(job => {
-        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage || 0}% required. Apply before ${formatDate(job.application_deadline)}.`;
+        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage || 0}% required.`;
         const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
         const isPinned = pinnedJobs.includes(job.id);
         
@@ -360,13 +352,11 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             
             <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div class="job-title" itemprop="title">
-                    <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">
-                        ${job.title}
-                    </a>
+                    <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">${job.title}</a>
                 </div>
-               ${currentUser ? `
+                ${currentUser ? `
                 <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;" title="${isPinned ? 'Unsave job' : 'Save job'}">
-                    ${isPinned ? '🔖' : '📑'}
+                    ${isPinned ? '📌' : '📍'}
                 </button>
                 ` : ''}
             </div>
@@ -375,17 +365,13 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
                 <span itemprop="name">${job.organization}</span> • ${job.post_name}
             </div>
             
-            <div itemprop="description" style="color: #666; margin: 10px 0; font-size: 14px;">
-                ${shortDesc}
-            </div>
+            <div itemprop="description" style="color: #666; margin: 10px 0; font-size: 14px;">${shortDesc}</div>
             
             <div class="job-meta">
                 <span>📅 Start: ${formatDate(job.application_start_date || job.posted_date)}</span>
                 <span>⏰ Deadline: ${formatDate(job.application_deadline)}</span>
                 <span itemprop="educationRequirements">🎓 ${job.education_required}</span>
-                <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place">
-                    <span itemprop="address">📍 ${job.state}</span>
-                </span>
+                <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="address">📍 ${job.state}</span></span>
                 ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 'N/A'}-${job.max_age || 'N/A'}</span>` : ''}
                 <span>📊 Min ${job.min_percentage || 0}%</span>
             </div>
@@ -400,9 +386,7 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             ` : ''}
             
             <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">
-                    View Details →
-                </a>
+                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
             </div>
         </article>
     `;
@@ -415,7 +399,6 @@ function formatDate(dateStr) {
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Auth Modal Functions
 function openAuthModal() {
     document.getElementById('authModal').classList.add('active');
 }
@@ -481,29 +464,29 @@ document.getElementById('authForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Profile Modal Functions
 async function openProfileModal() {
-    // Load fresh categories from DB
-    const { data: cats } = await supabase.from('categories').select('name').order('name');
-    const categoryHTML = (cats || []).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    await loadAppConfig();
     
-    document.getElementById('category').innerHTML = categoryHTML;
+    const levelSelect = document.getElementById('educationLevel');
+    levelSelect.innerHTML = '<option value="">Select</option>' + educationLevels.map(l => `<option value="${l}">${l}</option>`).join('');
+    
+    const categorySelect = document.getElementById('category');
+    categorySelect.innerHTML = configCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+    
+    const stateSelect = document.getElementById('state');
+    stateSelect.innerHTML = configStates.map(s => `<option value="${s}">${s}</option>`).join('');
     
     document.getElementById('profileModal').classList.add('active');
+    
     if (userProfile) {
         document.getElementById('fullName').value = userProfile.full_name;
         document.getElementById('phone').value = userProfile.phone || '';
         document.getElementById('age').value = userProfile.age;
         document.getElementById('educationLevel').value = userProfile.education_level;
-        await loadAppConfig(); // Reload config
         updateFields();
         document.getElementById('educationField').value = userProfile.education_field || '';
         document.getElementById('percentage').value = userProfile.percentage;
-        document.getElementById('category').value = userProfile.category; // Set selected
-        
-        // Load states dynamically
-        const { data: sts } = await supabase.from('states').select('name').order('name');
-        document.getElementById('state').innerHTML = (sts || []).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+        document.getElementById('category').value = userProfile.category;
         document.getElementById('state').value = userProfile.state;
     }
 }
@@ -514,22 +497,6 @@ function closeProfileModal() {
 
 function openEditProfile() {
     openProfileModal();
-}
-
-function updateFields() {
-    const level = document.getElementById('educationLevel').value;
-    const fieldGroup = document.getElementById('fieldGroup');
-    const fieldSelect = document.getElementById('educationField');
-
-    if (level === '10th' || level === '12th') {
-        fieldGroup.classList.add('hidden');
-        fieldSelect.removeAttribute('required');
-    } else if (educationFieldsMap[level]) {
-        fieldGroup.classList.remove('hidden');
-        fieldSelect.setAttribute('required', 'required');
-        fieldSelect.innerHTML = '<option value="">Select Field</option>' +
-            educationFieldsMap[level].map(f => `<option value="${f}">${f}</option>`).join('');
-    }
 }
 
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
@@ -578,44 +545,15 @@ function displayProfile() {
 
     document.getElementById('profileInfo').innerHTML = `
         <div class="profile-info">
-            <div class="info-item">
-                <div class="info-label">Name</div>
-                <div class="info-value">${userProfile.full_name}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Email</div>
-                <div class="info-value">${userProfile.email}</div>
-            </div>
-            ${userProfile.phone ? `
-            <div class="info-item">
-                <div class="info-label">Phone</div>
-                <div class="info-value">${userProfile.phone}</div>
-            </div>
-            ` : ''}
-            <div class="info-item">
-                <div class="info-label">Age</div>
-                <div class="info-value">${userProfile.age} years</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Education</div>
-                <div class="info-value">${userProfile.education_level}${userProfile.education_field ? ' - ' + userProfile.education_field : ''}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Percentage</div>
-                <div class="info-value">${userProfile.percentage}%</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Category</div>
-                <div class="info-value">${userProfile.category}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Preferred State</div>
-                <div class="info-value">${userProfile.state}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Pinned Jobs</div>
-                <div class="info-value">${pinnedJobs.length} jobs</div>
-            </div>
+            <div class="info-item"><div class="info-label">Name</div><div class="info-value">${userProfile.full_name}</div></div>
+            <div class="info-item"><div class="info-label">Email</div><div class="info-value">${userProfile.email}</div></div>
+            ${userProfile.phone ? `<div class="info-item"><div class="info-label">Phone</div><div class="info-value">${userProfile.phone}</div></div>` : ''}
+            <div class="info-item"><div class="info-label">Age</div><div class="info-value">${userProfile.age} years</div></div>
+            <div class="info-item"><div class="info-label">Education</div><div class="info-value">${userProfile.education_level}${userProfile.education_field ? ' - ' + userProfile.education_field : ''}</div></div>
+            <div class="info-item"><div class="info-label">Percentage</div><div class="info-value">${userProfile.percentage}%</div></div>
+            <div class="info-item"><div class="info-label">Category</div><div class="info-value">${userProfile.category}</div></div>
+            <div class="info-item"><div class="info-label">Preferred State</div><div class="info-value">${userProfile.state}</div></div>
+            <div class="info-item"><div class="info-label">Pinned Jobs</div><div class="info-value">${pinnedJobs.length} jobs</div></div>
         </div>
     `;
 }
