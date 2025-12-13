@@ -16,10 +16,15 @@
             margin: 0;
             padding: 0;
         }
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 0;
+        header { 
+            background: white; 
+            color: #333; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e0e0e0;
         }
         .nav-container {
             max-width: 1200px;
@@ -29,8 +34,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .logo { font-size: 28px; font-weight: bold; }
-        .logo a { color: white; text-decoration: none; }
+      
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -109,14 +113,53 @@
             margin-top: 60px;
         }
         footer a { color: #a0aec0; text-decoration: none; }
+         .logo { 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+        .logo-img { 
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+        }
+        .back-btn {
+            background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); ;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .back-btn:hover {
+            background: rgba(161, 154, 154, 0.3);
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="nav-container">
-            <div class="logo">
-                <a href="index.html">🇮🇳 SarkariAI</a>
-            </div>
+            <div class="logo" onclick="window.location.href='index.html'">
+                <img src="logo.png" alt="SarkariAI - Smart Government Job Matching" class="logo-img">
+        </div>
+         <a href="index.html" class="back-btn">← Back to Jobs</a>
         </div>
     </header>
 

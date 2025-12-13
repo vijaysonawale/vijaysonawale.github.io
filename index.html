@@ -10,12 +10,41 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; }
-        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+
+        /* header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; } */
+        header { 
+            background: white; 
+            color: #333; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .nav-links { 
+            display: flex; 
+            gap: 20px; 
+            align-items: center; 
+        }
+
+        .nav-links a { 
+            color: #333; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: all 0.3s; 
+            cursor: pointer; 
+        }
+
+        .nav-links a:hover { 
+            color: #667eea; 
+        }
+
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 28px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
+        /* .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: opacity 0.3s; cursor: pointer; }
-        .nav-links a:hover { opacity: 0.8; }
+        .nav-links a:hover { opacity: 0.8; } */
         .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; text-decoration: none; display: inline-block; }
         .btn-primary { background: white; color: #667eea; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -76,12 +105,46 @@
             .job-card > div:last-child { display: flex; flex-direction: column; gap: 10px; }
             .job-card a { width: 100% !important; display: block !important; }
         }
+        .logo { 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+        .logo-img { 
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="nav-container">
-            <div class="logo">🇮🇳 SarkariAI</div>
+            <!-- <div class="logo">🇮🇳 SarkariAI</div>
+              -->
+            <!-- LOGO SECTION - YAHAN APKA LOGO AAYEGA -->
+            <div class="logo" onclick="window.location.href='index.html'">
+                <img src="logo.png" alt="SarkariAI - Smart Government Job Matching" class="logo-img">
+                <!-- Optional: Text bhi rakhna hai to uncomment karein -->
+                <!-- <span class="logo-text">SarkariAI</span> -->
+            </div>
             <div class="nav-links">
                 <a href="#tabRecommended">Recommended For You</a>                
                 <a href="#jobs">Jobs</a>
