@@ -85,7 +85,8 @@
             <div class="manager-box">
                 <h3>Education Levels</h3>
                 <div class="add-row">
-                    <input type="text" id="newLevel" placeholder="Add level (e.g., ITI)">
+                    <input type="text" id="newLevel" placeholder="Level name">
+                    <input type="number" id="newLevelHierarchy" placeholder="Hierarchy (1-10)" min="1" max="10">
                     <button class="btn btn-success" onclick="addLvl()">Add</button>
                 </div>
                 <div id="lvlsDisplay" class="items-grid"></div>
@@ -214,20 +215,24 @@
         }
 
         async function loadLvls() {
-            const { data } = await sb.from('education_levels').select('*').order('name');
+            const { data } = await sb.from('education_levels').select('*').order('hierarchy');
             document.getElementById('lvlsDisplay').innerHTML = (data || []).map(l => 
-                `<div class="item-tag">${l.name}<button onclick="delLvl('${l.name}')">×</button></div>`
+                `<div class="item-tag">${l.name} (${l.hierarchy})<button onclick="delLvl('${l.name}')">×</button></div>`
             ).join('');
         }
 
         async function addLvl() {
             const n = document.getElementById('newLevel').value.trim();
-            if (!n) return;
-            const { error } = await sb.from('education_levels').insert([{ name: n }]);
+            const h = parseInt(document.getElementById('newLevelHierarchy').value);
+            if (!n || !h) return alert('Fill both fields');
+            const { error } = await sb.from('education_levels').insert([{ name: n, hierarchy: h }]);
             if (!error) {
                 document.getElementById('newLevel').value = '';
+                document.getElementById('newLevelHierarchy').value = '';
                 loadLvls();
                 msg('✅ Added', 'success');
+            } else {
+                alert('Error: ' + error.message);
             }
         }
 
@@ -372,7 +377,7 @@
         }
 
         async function popMdl() {
-            const { data: lvls } = await sb.from('education_levels').select('name').order('name');
+            const { data: lvls } = await sb.from('education_levels').select('name').order('hierarchy');
             document.getElementById('eduReq').innerHTML = (lvls || []).map(l => 
                 `<option value="${l.name}">${l.name}</option>`
             ).join('');

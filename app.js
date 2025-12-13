@@ -276,12 +276,24 @@ async function loadAllJobs() {
     }
 }
 
+// Line ~166 ke baad add karo
 async function loadRecommendedJobs() {
     if (!userProfile) return;
 
     document.getElementById('recommendedJobs').innerHTML = '<div class="loading">Loading your recommended jobs...</div>';
 
     try {
+        // Get education levels dynamically
+        const { data: levelsData } = await supabase
+            .from('education_levels')
+            .select('name, hierarchy')
+            .order('hierarchy');
+        
+        const educationLevelHierarchy = {};
+        (levelsData || []).forEach(l => {
+            educationLevelHierarchy[l.name] = l.hierarchy;
+        });
+
         const { data: allJobs, error } = await supabase
             .from('jobs')
             .select('*')
@@ -289,16 +301,6 @@ async function loadRecommendedJobs() {
             .order('posted_date', { ascending: false });
 
         if (error) throw error;
-
-        const educationLevelHierarchy = {
-            '10th': 1,
-            '12th': 2,
-            'ITI': 3,
-            'Diploma': 4,
-            'Degree': 5,
-            'B.Ed': 5,
-            'Post Graduate': 6
-        };
 
         const matched = allJobs.filter(job => {
             if (job.min_age && userProfile.age < job.min_age) return false;
