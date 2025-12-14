@@ -629,27 +629,28 @@ function init() {
     loadJobDetails();
 
     async function loadJobDetails() {
-        try {
-            const { data: job, error } = await supabase
-                .from('jobs')
-                .select('*')
-                .ilike('id', shortId + '%')
-                .single();
+    try {
+        const { data, error } = await supabase
+            .rpc('get_job_by_short_id', { short_id: shortId });
 
-            if (error || !job) {
-                console.error('Error:', error);
-                alert('Job not found');
-                window.location.href = 'index.html';
-                return;
-            }
+        if (error) throw error;
 
-            displayJobDetails(job);
-            loadRelatedJobs(job);
-        } catch (error) {
-            console.error('Catch error:', error);
-            alert('Error loading job');
+        const job = data[0];
+
+        if (!job) {
+            alert('Job not found');
+            window.location.href = 'index.html';
+            return;
         }
+
+        displayJobDetails(job);
+        loadRelatedJobs(job);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error loading job');
+        window.location.href = 'index.html';
     }
+}
 
     function displayJobDetails(job) {
         document.getElementById('pageTitle').textContent = `${job.title} - ${job.organization} | SarkariAI`;
