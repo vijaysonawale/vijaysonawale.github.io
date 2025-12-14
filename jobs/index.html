@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Redirect - SarkariAI</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 100px 20px; }
+        .loader { font-size: 48px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-    <div style="text-align: center; padding: 100px 20px; font-family: Arial;">
-        <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
-        <h2>Loading Job Details...</h2>
-        <p style="color: #666;">Please wait while we fetch the job information</p>
-    </div>
+    <div class="loader">⏳</div>
+    <h2>Loading Job Details...</h2>
+    <p style="color: #666;">Please wait...</p>
 
     <script>
         const sb = window.supabase.createClient(
@@ -19,47 +22,43 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZ3F0YmJ4c2JwdHNzeWJnYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1OTQ4NDYsImV4cCI6MjA4MTE3MDg0Nn0.cktVnZkay3MjYIG_v0WJSkotyq79Nnkr3JJn_munDi8'
         );
 
-        async function handleRedirect() {
+        async function redirect() {
             try {
-                // Get current path: /jobs/ssc-cgl-2024-combined-graduate-level-bf04a1fe
                 const path = window.location.pathname;
-                const filename = path.split('/').pop(); // Get last part
+                const filename = path.split('/').pop();
                 
                 if (!filename || filename === 'index.html') {
                     window.location.href = '/index.html';
                     return;
                 }
 
-                // Extract job ID from end (last part after last hyphen)
-                // ssc-cgl-2024-combined-graduate-level-bf04a1fe -> bf04a1fe
+                // Extract ID: rssb-reet-mains-primary-teacher-recruitment-2025-bf04a1fe -> bf04a1fe
                 const parts = filename.split('-');
                 const jobId = parts[parts.length - 1];
 
-                // Verify job exists in Supabase
+                // Verify job exists
                 const { data, error } = await sb
                     .from('jobs')
-                    .select('id, title')
+                    .select('id')
                     .eq('id', jobId)
                     .single();
 
                 if (error || !data) {
-                    console.error('Job not found:', jobId);
-                    alert('Job not found! Redirecting to homepage...');
+                    alert('Job not found!');
                     window.location.href = '/index.html';
                     return;
                 }
 
-                // Redirect to job details page with ID
+                // Redirect to job details
                 window.location.href = `/job-details.html?id=${jobId}`;
 
             } catch (err) {
-                console.error('Error:', err);
+                console.error(err);
                 window.location.href = '/index.html';
             }
         }
 
-        // Run on page load
-        handleRedirect();
+        redirect();
     </script>
 </body>
 </html>
