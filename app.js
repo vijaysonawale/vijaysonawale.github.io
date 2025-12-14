@@ -333,30 +333,31 @@ async function loadRecommendedJobs() {
 // ===================================
 // SEO URL Helper Functions
 // ===================================
+function generateJobSlug(title) {
+    return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
 
-// function generateJobSlug(title) {
-//     return title
-//         .toLowerCase()
-//         .trim()
-//         .replace(/[^\w\s-]/g, '')      // Remove special characters
-//         .replace(/\s+/g, '-')           // Replace spaces with hyphens
-//         .replace(/-+/g, '-')            // Replace multiple hyphens with single
-//         .replace(/^-+|-+$/g, '');      // Remove leading/trailing hyphens
-// }
+function getShortId(jobId) {
+    return jobId.substring(0, 8);
+}
 
 function getJobUrl(jobId, jobTitle) {
-    return `job-details.html?id=${jobId}`;
+    const slug = generateJobSlug(jobTitle);
+    const shortId = getShortId(jobId);
+    return `job-details.html?job=${slug}&id=${shortId}`;
 }
 
 function renderJobs(jobs, containerId, isPinnedView = false) {
     const container = document.getElementById(containerId);
 
     if (jobs.length === 0) {
-        container.innerHTML = `
-            <div class="loading">
-                <p>No ${containerId === 'recommendedJobs' ? 'matching' : 'active'} jobs found</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="loading"><p>No jobs found</p></div>`;
         return;
     }
 
@@ -364,6 +365,7 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
         const description = job.description || `${job.organization} invites applications for ${job.post_name}.`;
         const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
         const isPinned = pinnedJobs.includes(job.id);
+        const jobUrl = getJobUrl(job.id, job.title);
         
         return `
         <article class="job-card" itemscope itemtype="https://schema.org/JobPosting">
@@ -372,10 +374,10 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             
             <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div class="job-title" itemprop="title">
-                    <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">${job.title}</a>
+                    <a href="${jobUrl}" style="color: #667eea; text-decoration: none;">${job.title}</a>
                 </div>
                 ${currentUser ? `
-                <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;" title="${isPinned ? 'Unsave job' : 'Save job'}">
+                <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;">
                     ${isPinned ? '📌' : '📍'}
                 </button>
                 ` : ''}
@@ -408,8 +410,8 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             ` : ''}
             
             <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
-                <button onclick="shareJob('${job.id}', '${job.title.replace(/'/g, "\\'")}', 'job-details.html?id=${job.id}')" class="btn-apply" style="flex: 0; background: #4CAF50; padding: 0 20px;">
+                <a href="${jobUrl}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
+                <button onclick="shareJob('${job.id}', '${job.title.replace(/'/g, "\\'")}', '${jobUrl}')" class="btn-apply" style="flex: 0; background: #4CAF50; padding: 0 20px;">
                     📤 Share
                 </button>
             </div>
@@ -422,9 +424,9 @@ function shareJob(jobId, jobTitle, jobUrl) {
     const fullUrl = `${window.location.origin}/${jobUrl}`;
     const shareText = `🎯 ${jobTitle}
 
-🔗 Apply: ${fullUrl}
+🔗 ${fullUrl}
 
-📱 SarkariAI - AI job matching
+📱 SarkariAI - AI job recommendations
 #SarkariAI #GovernmentJobs`;
 
     if (navigator.share) {
