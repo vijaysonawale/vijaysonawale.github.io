@@ -346,17 +346,10 @@ function generateJobSlug(title) {
 
 function getJobUrl(jobId, jobTitle) {
     const slug = generateJobSlug(jobTitle);
-    const shortId = jobId.substring(0, 8); // Use first 8 chars of ID
+    const shortId = jobId.substring(0, 8);
     
-    // Current domain (change when you buy domain)
-    const baseUrl = 'https://vijaysonawale.github.io';
-    
-    // SEO-friendly URL
-    return `${baseUrl}/jobs/${slug}-${shortId}`;
-    
-    // Examples:
-    // https://vijaysonawale.github.io/jobs/ssc-cgl-2024-combined-graduate-level-bf04a1fe
-    // https://vijaysonawale.github.io/jobs/railway-ntpc-recruitment-2024-abc12345
+    // SEO-friendly query params
+    return `https://vijaysonawale.github.io/job-details.html?job=${slug}&id=${shortId}`;
 }
 
 // Update existing renderJobs function
