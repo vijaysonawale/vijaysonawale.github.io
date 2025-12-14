@@ -630,24 +630,33 @@ function init() {
 
     async function loadJobDetails() {
     try {
-        const { data, error } = await supabase
-            .rpc('get_job_by_short_id', { short_id: shortId });
+        // Fetch ALL jobs
+        const { data: allJobs, error } = await supabase
+            .from('jobs')
+            .select('*');
 
-        if (error) throw error;
+        if (error) {
+            console.error('Supabase Error:', error);
+            alert('Database error');
+            return;
+        }
 
-        const job = data[0];
+        // Find job jiska ID shortId se start hota hai
+        const job = allJobs.find(j => j.id.startsWith(shortId));
 
         if (!job) {
-            alert('Job not found');
+            alert('Job not found!');
             window.location.href = 'index.html';
             return;
         }
 
+        // Job mil gaya, ab display karo
         displayJobDetails(job);
         loadRelatedJobs(job);
+
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error loading job');
+        console.error('Catch Error:', error);
+        alert('Something went wrong');
         window.location.href = 'index.html';
     }
 }
