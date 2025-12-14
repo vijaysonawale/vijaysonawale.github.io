@@ -607,160 +607,168 @@
         </p>
     </footer>
 
-    <script>
-        const SUPABASE_URL = 'https://yhgqtbbxsbptssybgbrl.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZ3F0YmJ4c2JwdHNzeWJnYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1OTQ4NDYsImV4cCI6MjA4MTE3MDg0Nn0.cktVnZkay3MjYIG_v0WJSkotyq79Nnkr3JJn_munDi8';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(init, 100);
+});
 
-const urlParams = new URLSearchParams(window.location.search);
-const shortId = urlParams.get('id');
+function init() {
+    const SUPABASE_URL = 'https://yhgqtbbxsbptssybgbrl.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloZ3F0YmJ4c2JwdHNzeWJnYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1OTQ4NDYsImV4cCI6MjA4MTE3MDg0Nn0.cktVnZkay3MjYIG_v0WJSkotyq79Nnkr3JJn_munDi8';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-if (!shortId) {
-    window.location.href = 'index.html';
-} else {
+    const urlParams = new URLSearchParams(window.location.search);
+    const shortId = urlParams.get('id');
+
+    if (!shortId) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     loadJobDetails();
-}
 
-async function loadJobDetails() {
-    try {
-        const { data: job, error } = await supabase
-            .from('jobs')
-            .select('*')
-            .ilike('id', shortId + '%')
-            .single();
+    async function loadJobDetails() {
+        try {
+            const { data: job, error } = await supabase
+                .from('jobs')
+                .select('*')
+                .ilike('id', shortId + '%')
+                .single();
 
-        if (error || !job) {
-            alert('Job not found');
-            window.location.href = 'index.html';
-            return;
+            if (error || !job) {
+                console.error('Error:', error);
+                alert('Job not found');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            displayJobDetails(job);
+            loadRelatedJobs(job);
+        } catch (error) {
+            console.error('Catch error:', error);
+            alert('Error loading job');
+        }
+    }
+
+    function displayJobDetails(job) {
+        document.getElementById('pageTitle').textContent = `${job.title} - ${job.organization} | SarkariAI`;
+        document.getElementById('pageDescription').content = `Apply for ${job.title} at ${job.organization}. Education: ${job.education_required}. Deadline: ${formatDate(job.application_deadline)}`;
+        document.getElementById('ogTitle').content = `${job.title} - ${job.organization}`;
+        document.getElementById('ogDescription').content = `Apply for ${job.title}. Deadline: ${formatDate(job.application_deadline)}`;
+
+        document.getElementById('jobTitle').textContent = job.title;
+        document.getElementById('jobOrg').textContent = `${job.organization} • ${job.post_name}`;
+        document.getElementById('breadcrumbTitle').textContent = job.title;
+
+        const badges = [];
+        const daysLeft = getDaysLeft(job.application_deadline);
+        if (daysLeft <= 7) {
+            badges.push(`<span class="badge deadline">⚠️ ${daysLeft} days left</span>`);
+        } else if (daysLeft <= 15) {
+            badges.push(`<span class="badge urgent">⏰ Apply Soon</span>`);
+        }
+        badges.push(`<span class="badge">🎓 ${job.education_required}</span>`);
+        badges.push(`<span class="badge">📍 ${job.state}</span>`);
+        document.getElementById('jobBadges').innerHTML = badges.join('');
+
+        document.getElementById('jobDescription').textContent = job.description || 
+            `${job.organization} has announced recruitment for the post of ${job.post_name}. Eligible candidates can apply online through the official website before the deadline.`;
+
+        document.getElementById('ageRange').textContent = formatAge(job.min_age, job.max_age);
+        document.getElementById('educationRequired').textContent = job.education_required;
+        
+        if (job.education_fields?.length) {
+            document.getElementById('educationFields').innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Fields:</span>
+                    <span class="info-value">${job.education_fields.join(', ')}</span>
+                </div>
+            `;
+        }
+        
+        document.getElementById('minPercentage').textContent = `${job.min_percentage}%`;
+        document.getElementById('categories').textContent = job.categories?.length ? job.categories.join(', ') : 'All Categories';
+        document.getElementById('jobState').textContent = job.state;
+
+        if (job.additional_requirements) {
+            document.getElementById('additionalReqs').innerHTML = `
+                <h3>Additional Requirements</h3>
+                <p>${job.additional_requirements}</p>
+            `;
         }
 
-        displayJobDetails(job);
-        loadRelatedJobs(job);
-    } catch (error) {
-        console.error(error);
-        alert('Error loading job');
-    }
-}
+        document.getElementById('postedDate').textContent = formatDate(job.posted_date);
+        document.getElementById('startDate').textContent = formatDate(job.application_start_date || job.posted_date);
+        document.getElementById('deadlineDate').textContent = formatDate(job.application_deadline);
+        document.getElementById('admitCardDate').textContent = job.admit_card_date || 'Will Be Updated Here Soon';
+        document.getElementById('resultDateDisplay').textContent = job.result_date || 'Will Be Updated Here Soon';
+        document.getElementById('deadlineDisplay').textContent = formatDate(job.application_deadline);
+        document.getElementById('daysLeft').textContent = daysLeft > 0 ? `${daysLeft} days remaining` : 'EXPIRED';
 
-function displayJobDetails(job) {
-    document.getElementById('pageTitle').textContent = `${job.title} - ${job.organization} | SarkariAI`;
-    document.getElementById('pageDescription').content = `Apply for ${job.title} at ${job.organization}. Education: ${job.education_required}. Deadline: ${formatDate(job.application_deadline)}`;
-    document.getElementById('ogTitle').content = `${job.title} - ${job.organization}`;
-    document.getElementById('ogDescription').content = `Apply for ${job.title}. Deadline: ${formatDate(job.application_deadline)}`;
+        document.getElementById('applyBtn').href = job.apply_link;
 
-    document.getElementById('jobTitle').textContent = job.title;
-    document.getElementById('jobOrg').textContent = `${job.organization} • ${job.post_name}`;
-    document.getElementById('breadcrumbTitle').textContent = job.title;
+        document.getElementById('qfEducation').textContent = job.education_required;
+        document.getElementById('qfAge').textContent = formatAge(job.min_age, job.max_age);
+        document.getElementById('qfLocation').textContent = job.state;
+        document.getElementById('qfPercentage').textContent = `${job.min_percentage}%`;
 
-    const badges = [];
-    const daysLeft = getDaysLeft(job.application_deadline);
-    if (daysLeft <= 7) {
-        badges.push(`<span class="badge deadline">⚠️ ${daysLeft} days left</span>`);
-    } else if (daysLeft <= 15) {
-        badges.push(`<span class="badge urgent">⏰ Apply Soon</span>`);
-    }
-    badges.push(`<span class="badge">🎓 ${job.education_required}</span>`);
-    badges.push(`<span class="badge">📍 ${job.state}</span>`);
-    document.getElementById('jobBadges').innerHTML = badges.join('');
-
-    document.getElementById('jobDescription').textContent = job.description || 
-        `${job.organization} has announced recruitment for the post of ${job.post_name}. Eligible candidates can apply online through the official website before the deadline.`;
-
-    document.getElementById('ageRange').textContent = formatAge(job.min_age, job.max_age);
-    document.getElementById('educationRequired').textContent = job.education_required;
-    
-    if (job.education_fields?.length) {
-        document.getElementById('educationFields').innerHTML = `
-            <div class="info-row">
-                <span class="info-label">Fields:</span>
-                <span class="info-value">${job.education_fields.join(', ')}</span>
-            </div>
-        `;
-    }
-    
-    document.getElementById('minPercentage').textContent = `${job.min_percentage}%`;
-    document.getElementById('categories').textContent = job.categories?.length ? job.categories.join(', ') : 'All Categories';
-    document.getElementById('jobState').textContent = job.state;
-
-    if (job.additional_requirements) {
-        document.getElementById('additionalReqs').innerHTML = `
-            <h3>Additional Requirements</h3>
-            <p>${job.additional_requirements}</p>
-        `;
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
     }
 
-    document.getElementById('postedDate').textContent = formatDate(job.posted_date);
-    document.getElementById('startDate').textContent = formatDate(job.application_start_date || job.posted_date);
-    document.getElementById('deadlineDate').textContent = formatDate(job.application_deadline);
-    document.getElementById('admitCardDate').textContent = job.admit_card_date || 'Will Be Updated Here Soon';
-    document.getElementById('resultDateDisplay').textContent = job.result_date || 'Will Be Updated Here Soon';
-    document.getElementById('deadlineDisplay').textContent = formatDate(job.application_deadline);
-    document.getElementById('daysLeft').textContent = daysLeft > 0 ? `${daysLeft} days remaining` : 'EXPIRED';
+    async function loadRelatedJobs(currentJob) {
+        try {
+            const { data: jobs, error } = await supabase
+                .from('jobs')
+                .select('*')
+                .neq('id', currentJob.id)
+                .eq('education_required', currentJob.education_required)
+                .gte('application_deadline', new Date().toISOString())
+                .limit(4);
 
-    document.getElementById('applyBtn').href = job.apply_link;
-
-    document.getElementById('qfEducation').textContent = job.education_required;
-    document.getElementById('qfAge').textContent = formatAge(job.min_age, job.max_age);
-    document.getElementById('qfLocation').textContent = job.state;
-    document.getElementById('qfPercentage').textContent = `${job.min_percentage}%`;
-
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
-}
-
-async function loadRelatedJobs(currentJob) {
-    try {
-        const { data: jobs, error } = await supabase
-            .from('jobs')
-            .select('*')
-            .neq('id', currentJob.id)
-            .eq('education_required', currentJob.education_required)
-            .gte('application_deadline', new Date().toISOString())
-            .limit(4);
-
-        if (jobs?.length) {
-            document.getElementById('relatedJobsContainer').innerHTML = jobs.map(job => {
-                const slug = generateJobSlug(job.title);
-                const sid = job.id.substring(0, 8);
-                return `
-                    <div class="job-small-card" onclick="window.location.href='job-details.html?job=${slug}&id=${sid}'">
-                        <h4>${job.title}</h4>
-                        <p>${job.organization} • Deadline: ${formatDate(job.application_deadline)}</p>
-                    </div>
-                `;
-            }).join('');
-        } else {
-            document.querySelector('.related-jobs').style.display = 'none';
+            if (jobs?.length) {
+                document.getElementById('relatedJobsContainer').innerHTML = jobs.map(job => {
+                    const slug = generateJobSlug(job.title);
+                    const sid = job.id.substring(0, 8);
+                    return `
+                        <div class="job-small-card" onclick="window.location.href='job-details.html?job=${slug}&id=${sid}'">
+                            <h4>${job.title}</h4>
+                            <p>${job.organization} • Deadline: ${formatDate(job.application_deadline)}</p>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                document.querySelector('.related-jobs').style.display = 'none';
+            }
+        } catch (error) {
+            console.error(error);
         }
-    } catch (error) {
-        console.error(error);
+    }
+
+    function generateJobSlug(title) {
+        return title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return 'N/A';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function formatAge(min, max) {
+        if (!min && !max) return 'Not Specified';
+        if (!min) return `Up to ${max} years`;
+        if (!max) return `${min} years and above`;
+        return `${min} - ${max} years`;
+    }
+
+    function getDaysLeft(deadline) {
+        const now = new Date();
+        const end = new Date(deadline);
+        return Math.ceil((end - now) / (1000 * 60 * 60 * 24));
     }
 }
-
-function generateJobSlug(title) {
-    return title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
-}
-
-function formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function formatAge(min, max) {
-    if (!min && !max) return 'Not Specified';
-    if (!min) return `Up to ${max} years`;
-    if (!max) return `${min} years and above`;
-    return `${min} - ${max} years`;
-}
-
-function getDaysLeft(deadline) {
-    const now = new Date();
-    const end = new Date(deadline);
-    return Math.ceil((end - now) / (1000 * 60 * 60 * 24));
-}
-
-    </script>
+</script>
 </body>
 </html>
