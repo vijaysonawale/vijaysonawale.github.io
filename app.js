@@ -416,7 +416,7 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             ` : ''}
             
             <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <a href="${seoUrl}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
+                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
                 <button onclick="shareJob('${job.id}', '${job.title.replace(/'/g, "\\'")}', '${seoUrl}')" class="btn-apply" style="flex: 0; background: #4CAF50; padding: 0 20px;">
                     📤 Share
                 </button>
