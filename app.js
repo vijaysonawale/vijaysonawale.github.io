@@ -330,22 +330,55 @@ async function loadRecommendedJobs() {
     }
 }
 
+// ===================================
+// SEO URL Helper Functions
+// ===================================
+
+function generateJobSlug(title) {
+    return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')      // Remove special characters
+        .replace(/\s+/g, '-')           // Replace spaces with hyphens
+        .replace(/-+/g, '-')            // Replace multiple hyphens with single
+        .replace(/^-+|-+$/g, '');      // Remove leading/trailing hyphens
+}
+
+function getJobUrl(jobId, jobTitle) {
+    const slug = generateJobSlug(jobTitle);
+    const shortId = jobId.substring(0, 8); // Use first 8 chars of ID
+    
+    // Current domain (change when you buy domain)
+    const baseUrl = 'https://vijaysonawale.github.io';
+    
+    // SEO-friendly URL
+    return `${baseUrl}/jobs/${slug}-${shortId}`;
+    
+    // Examples:
+    // https://vijaysonawale.github.io/jobs/ssc-cgl-2024-combined-graduate-level-bf04a1fe
+    // https://vijaysonawale.github.io/jobs/railway-ntpc-recruitment-2024-abc12345
+}
+
+// Update existing renderJobs function
 function renderJobs(jobs, containerId, isPinnedView = false) {
     const container = document.getElementById(containerId);
 
     if (jobs.length === 0) {
         container.innerHTML = `
             <div class="loading">
-                <p>No ${containerId === 'recommendedJobs' ? 'matching' : 'active'} jobs found${containerId === 'recommendedJobs' ? '. Try updating your profile or check back later!' : '. Check back soon!'}</p>
+                <p>No ${containerId === 'recommendedJobs' ? 'matching' : 'active'} jobs found</p>
             </div>
         `;
         return;
     }
 
     container.innerHTML = jobs.map(job => {
-        const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage || 0}% required.`;
+        const description = job.description || `${job.organization} invites applications for ${job.post_name}.`;
         const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
         const isPinned = pinnedJobs.includes(job.id);
+        
+        // Generate SEO URL
+        const seoUrl = getJobUrl(job.id, job.title);
         
         return `
         <article class="job-card" itemscope itemtype="https://schema.org/JobPosting">
@@ -354,7 +387,7 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             
             <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div class="job-title" itemprop="title">
-                    <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">${job.title}</a>
+                    <a href="${seoUrl}" style="color: #667eea; text-decoration: none;">${job.title}</a>
                 </div>
                 ${currentUser ? `
                 <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;" title="${isPinned ? 'Unsave job' : 'Save job'}">
@@ -373,7 +406,9 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
                 <span>📅 Start: ${formatDate(job.application_start_date || job.posted_date)}</span>
                 <span>⏰ Deadline: ${formatDate(job.application_deadline)}</span>
                 <span itemprop="educationRequirements">🎓 ${job.education_required}</span>
-                <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="address">📍 ${job.state}</span></span>
+                <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place">
+                    <span itemprop="address">📍 ${job.state}</span>
+                </span>
                 ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 'N/A'}-${job.max_age || 'N/A'}</span>` : ''}
                 <span>📊 Min ${job.min_percentage || 0}%</span>
             </div>
@@ -388,12 +423,106 @@ function renderJobs(jobs, containerId, isPinnedView = false) {
             ` : ''}
             
             <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
+                <a href="${seoUrl}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
+                <button onclick="shareJob('${job.id}', '${job.title.replace(/'/g, "\\'")}', '${seoUrl}')" class="btn-apply" style="flex: 0; background: #4CAF50; padding: 0 20px;">
+                    📤 Share
+                </button>
             </div>
         </article>
     `;
     }).join('');
 }
+
+// Add Share Function
+function shareJob(jobId, jobTitle, jobUrl) {
+    const shareText = `🎯 ${jobTitle}
+
+🔗 Apply Now: ${jobUrl}
+
+📱 Download SarkariAI App for AI-powered government job recommendations!
+🇮🇳 Get personalized matches based on your profile
+
+#SarkariAI #GovernmentJobs #SarkariNaukri`;
+
+    if (navigator.share) {
+        // Mobile share
+        navigator.share({
+            title: jobTitle,
+            text: shareText,
+            url: jobUrl
+        }).catch(err => console.log('Share cancelled'));
+    } else {
+        // Desktop - copy to clipboard
+        navigator.clipboard.writeText(`${shareText}`).then(() => {
+            alert('✅ Link copied to clipboard!');
+        });
+    }
+}
+
+// function renderJobs(jobs, containerId, isPinnedView = false) {
+//     const container = document.getElementById(containerId);
+
+//     if (jobs.length === 0) {
+//         container.innerHTML = `
+//             <div class="loading">
+//                 <p>No ${containerId === 'recommendedJobs' ? 'matching' : 'active'} jobs found${containerId === 'recommendedJobs' ? '. Try updating your profile or check back later!' : '. Check back soon!'}</p>
+//             </div>
+//         `;
+//         return;
+//     }
+
+//     container.innerHTML = jobs.map(job => {
+//         const description = job.description || `${job.organization} invites applications for ${job.post_name}. Required education: ${job.education_required}. Minimum ${job.min_percentage || 0}% required.`;
+//         const shortDesc = description.length > 150 ? description.substring(0, 150) + '...' : description;
+//         const isPinned = pinnedJobs.includes(job.id);
+        
+//         return `
+//         <article class="job-card" itemscope itemtype="https://schema.org/JobPosting">
+//             <meta itemprop="datePosted" content="${job.posted_date}" />
+//             <meta itemprop="validThrough" content="${job.application_deadline}" />
+            
+//             <div style="display: flex; justify-content: space-between; align-items: start;">
+//                 <div class="job-title" itemprop="title">
+//                     <a href="job-details.html?id=${job.id}" style="color: #667eea; text-decoration: none;">${job.title}</a>
+//                 </div>
+//                 ${currentUser ? `
+//                 <button onclick="togglePinJob('${job.id}')" style="background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px;" title="${isPinned ? 'Unsave job' : 'Save job'}">
+//                     ${isPinned ? '📌' : '📍'}
+//                 </button>
+//                 ` : ''}
+//             </div>
+            
+//             <div class="job-org" itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization">
+//                 <span itemprop="name">${job.organization}</span> • ${job.post_name}
+//             </div>
+            
+//             <div itemprop="description" style="color: #666; margin: 10px 0; font-size: 14px;">${shortDesc}</div>
+            
+//             <div class="job-meta">
+//                 <span>📅 Start: ${formatDate(job.application_start_date || job.posted_date)}</span>
+//                 <span>⏰ Deadline: ${formatDate(job.application_deadline)}</span>
+//                 <span itemprop="educationRequirements">🎓 ${job.education_required}</span>
+//                 <span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="address">📍 ${job.state}</span></span>
+//                 ${job.min_age || job.max_age ? `<span>👤 Age: ${job.min_age || 'N/A'}-${job.max_age || 'N/A'}</span>` : ''}
+//                 <span>📊 Min ${job.min_percentage || 0}%</span>
+//             </div>
+            
+//             ${job.admit_card_date ? `<div style="margin: 5px 0; color: #666; font-size: 14px;">🎫 Admit Card: ${job.admit_card_date}</div>` : ''}
+//             ${job.result_date ? `<div style="margin: 5px 0; color: #666; font-size: 14px;">📋 Result: ${job.result_date}</div>` : ''}
+            
+//             ${job.education_fields?.length ? `
+//                 <div style="margin: 10px 0;">
+//                     ${job.education_fields.map(f => `<span class="badge">${f}</span>`).join('')}
+//                 </div>
+//             ` : ''}
+            
+//             <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+//                 <a href="job-details.html?id=${job.id}" class="btn-apply" style="flex: 1; text-align: center; min-width: 120px;">View Details →</a>
+//             </div>
+//         </article>
+//     `;
+//     }).join('');
+// }
 
 function formatDate(dateStr) {
     if (!dateStr) return 'N/A';
