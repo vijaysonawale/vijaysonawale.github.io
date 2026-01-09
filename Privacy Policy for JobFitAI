@@ -1,0 +1,105 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+    <title>Privacy Policy - JobFitAI</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #2563eb; }
+        h2 { color: #1e40af; margin-top: 30px; }
+        .highlight { background: #fef3c7; padding: 10px; border-left: 4px solid #f59e0b; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <p><strong>Last Updated:</strong> January 7, 2026</p>
+    <p><strong>Contact:</strong> sonawalesvijay@gmail.com</p>
+
+    <div class="highlight">
+        <strong>Important:</strong> JobFitAI is an INDEPENDENT job aggregator app. We are NOT affiliated with any government body and do NOT conduct recruitment.
+    </div>
+
+    <h2>1. Information We Collect</h2>
+    <p>We collect the following information when you create a profile:</p>
+    <ul>
+        <li>Email address</li>
+        <li>Age</li>
+        <li>Education level and field</li>
+        <li>Academic percentage</li>
+        <li>Category (General/OBC/SC/ST/EWS)</li>
+        <li>Preferred state</li>
+        <li>Saved jobs</li>
+        <li>Device notification token (for job alerts)</li>
+    </ul>
+
+    <h2>2. How We Use Your Information</h2>
+    <ul>
+        <li>Match your profile with relevant job postings</li>
+        <li>Send personalized job recommendations</li>
+        <li>Send push notifications for new matching jobs</li>
+        <li>Improve app functionality</li>
+    </ul>
+
+    <h2>3. Data Storage</h2>
+    <p>Your data is securely stored using Supabase (PostgreSQL database) with encryption. We use Firebase for analytics and push notifications.</p>
+
+    <h2>4. Data Sharing</h2>
+    <p><strong>We DO NOT sell or share your personal information with third parties.</strong></p>
+    <p>Third-party services we use:</p>
+    <ul>
+        <li><strong>Supabase:</strong> Database hosting (GDPR compliant)</li>
+        <li><strong>Firebase:</strong> Analytics &amp; notifications (Google)</li>
+    </ul>
+
+    <h2>5. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+        <li><strong>Access:</strong> View your profile data in the app</li>
+        <li><strong>Edit:</strong> Update your profile anytime</li>
+        <li><strong>Delete:</strong> Permanently delete your account and all data using the "Delete Account" button in Profile screen</li>
+    </ul>
+
+    <h2>6. Data Deletion</h2>
+    <p>To delete your account:</p>
+    <ol>
+        <li>Open JobFitAI app</li>
+        <li>Go to Profile tab</li>
+        <li>Scroll down and tap "Delete Account &amp; All Data"</li>
+        <li>Confirm deletion</li>
+    </ol>
+    <p>This will permanently remove your profile, saved jobs, and notification preferences. Deletion is immediate and cannot be undone.</p>
+    <p>Alternatively, email us at <strong>sonawalesvijay@gmail.com</strong> with your registered email to request deletion.</p>
+
+    <h2>7. Data Retention</h2>
+    <p>We retain your data as long as your account is active. Upon deletion, all data is permanently removed within 24 hours.</p>
+
+    <h2>8. Children's Privacy</h2>
+    <p>Our app is intended for users aged 15+. We do not knowingly collect data from children under 15.</p>
+
+    <h2>9. Security</h2>
+    <p>We use industry-standard security measures including SSL encryption and secure database access controls.</p>
+
+    <h2>10. Job Listings Disclaimer</h2>
+    <p>Job postings are aggregated from public sources. We are not responsible for:</p>
+    <ul>
+        <li>Accuracy of job information</li>
+        <li>Selection or recruitment processes</li>
+        <li>Application outcomes</li>
+    </ul>
+    <p><strong>Always verify details on official government websites before applying.</strong></p>
+
+    <h2>11. Analytics</h2>
+    <p>We use Firebase Analytics to understand app usage patterns. No personally identifiable information is shared with analytics services.</p>
+
+    <h2>12. Changes to Privacy Policy</h2>
+    <p>We may update this policy. Check this page for the latest version. Continued use after changes constitutes acceptance.</p>
+
+    <h2>13. Contact Us</h2>
+    <p>For privacy concerns or data deletion requests:</p>
+    <p><strong>Email:</strong> sonawalesvijay@gmail.com<br />
+    <strong>Developer:</strong> NextInt Inc</p>
+
+    <hr style="margin: 40px 0;" />
+    <p style="color: #666666; text-align: center;">© 2026 JobFitAI. Independent Job Aggregator.</p>
+</body>
+</html>
