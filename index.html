@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NextInt Inc | Android Apps by Vijay Sonawale</title>
+  <meta name="description" content="NextInt Inc — Android apps by Vijay Sonawale. Udhari Book, Car Kundali, Aaj Ka Rashifal, GovFitAI. Useful apps for Indian users. No login, 100% private."/>
+  <meta name="keywords" content="NextInt Inc, Vijay Sonawale, Android apps India, Udhari Book, Car Kundali OBD2, Aaj Ka Rashifal, GovFitAI, GST calculator, sarkari naukri app"/>
+  <meta name="author" content="Vijay Sonawale — NextInt Inc"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://vijaysonawale.github.io/"/>
+  <meta property="og:title" content="NextInt Inc | Android Apps by Vijay Sonawale"/>
+  <meta property="og:description" content="4 Android apps for Indian users — Udhari Book, Car Kundali, Rashifal & GovFitAI. No login. 100% private."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://vijaysonawale.github.io/"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"NextInt Inc","url":"https://vijaysonawale.github.io/","founder":{"@type":"Person","name":"Vijay Sonawale","jobTitle":"Android Developer","address":{"@type":"PostalAddress","addressLocality":"Ichalkaranji","addressRegion":"Maharashtra","addressCountry":"IN"}},"description":"Android app development for Indian users.","sameAs":["https://play.google.com/store/apps/developer?id=NextInt+Inc"]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    :root{--main:#30bd9b;--main-dark:#239c7e;--dark:#000209;--dark2:#121158;--second-text:#515184;--body-text:#3b3b3c;--bg:#f8f8f8;--white:#ffffff;--border:#eaeaea;--intro-bg:#e1caff;--yellow:#fdeea5;--cs:4px 4px 0px 0px var(--dark);--csh:6px 6px 0px 0px var(--dark)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Poppins',sans-serif;font-size:14px;font-weight:400;color:var(--body-text);background:var(--bg);word-wrap:break-word;overflow-x:hidden}
+    h1,h2,h3,h4,h5,h6{font-family:'Nunito',sans-serif;font-weight:700}
+    a{text-decoration:none;color:var(--main)}
+    a:hover{color:var(--dark)}
+    img{border:none;max-width:100%}
+    ul{list-style:none}
+    .container{max-width:1140px;margin:0 auto;padding:0 20px}
+
+    /* PRELOADER */
+    .preloader{position:fixed;inset:0;z-index:9999;background:var(--intro-bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s}
+    .preloader.hidden{opacity:0;pointer-events:none}
+    .pl-logo{font-family:'Nunito',sans-serif;font-size:30px;font-weight:900;color:var(--dark);margin-bottom:16px;text-align:center}
+    .pl-logo span{color:var(--main)}
+    .pl-bar{width:120px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:0 auto}
+    .pl-fill{height:100%;width:0;background:var(--main);animation:load 1.3s ease forwards}
+    @keyframes load{to{width:100%}}
+
+    /* MOBILE NAV */
+    .mob-nav{display:none;position:fixed;inset:0;background:var(--dark);z-index:2000;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+    .mob-nav.open{display:flex}
+    .mob-nav a{color:#fff;font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;padding:10px 30px;border-radius:8px;transition:.17s}
+    .mob-nav a:hover{background:var(--main);color:var(--dark)}
+    .mob-close{position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer}
+
+    /* TOP BAR */
+    #top-bar{background:var(--dark);padding:8px 0}
+    #top-bar .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .tb-left{font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:6px}
+    .tb-left span{color:var(--main);font-weight:600}
+    .tb-right{display:flex;gap:8px}
+    .tb-right a{width:28px;height:28px;border:1px solid rgba(255,255,255,.15);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.17s}
+    .tb-right a:hover{color:var(--main);border-color:var(--main)}
+
+    /* HEADER */
+    #header-wrap{position:sticky;top:0;z-index:1010;background:#fff;border-bottom:2px solid var(--dark);box-shadow:0 2px 0 0 var(--dark)}
+    #header-wrap .container{height:68px;display:flex;align-items:center;justify-content:space-between}
+    .hdr-logo a{display:flex;align-items:center;gap:10px;color:var(--dark)}
+    .logo-box{width:40px;height:40px;background:var(--dark);border:2px solid var(--dark);border-radius:8px;box-shadow:2px 2px 0 var(--main);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Nunito',sans-serif;font-size:20px;font-weight:900}
+    .logo-name{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--dark);line-height:1.1}
+    .logo-by{font-size:10px;color:var(--second-text);font-weight:500;letter-spacing:.06em}
+    #main-menu{display:flex;align-items:center}
+    #main-menu ul{display:flex;align-items:center;gap:4px}
+    #main-menu ul li a{color:var(--dark);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:6px 12px;border-radius:6px;transition:.17s}
+    #main-menu ul li a:hover{color:var(--main)}
+    .menu-cta a{background:var(--yellow)!important;color:var(--dark)!important;border:2px solid var(--dark)!important;box-shadow:3px 3px 0 var(--dark);border-radius:8px!important;font-weight:700!important;padding:8px 16px!important;transition:all .17s!important}
+    .menu-cta a:hover{box-shadow:1px 1px 0 var(--dark)!important;transform:translate(2px,2px)}
+    .mob-toggle{display:none;font-size:22px;cursor:pointer;color:var(--dark);background:none;border:none;padding:4px 8px}
+
+    /* HERO */
+    #intro-wrap{background:var(--intro-bg);padding:0 0 64px;position:relative;overflow:hidden}
+    #intro-wrap::before{content:'';position:absolute;inset:0;background-image:radial-gradient(var(--dark) 1px,transparent 1px);background-size:28px 28px;opacity:.05;pointer-events:none}
+    #intro-wrap .container{position:relative;z-index:2}
+    .intro-tag{display:inline-block;background:var(--yellow);border:2px solid var(--dark);box-shadow:2px 2px 0 var(--dark);color:var(--dark);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 14px;border-radius:4px;margin:60px 0 28px}
+    .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .intro-title{font-family:'Nunito',sans-serif;font-size:clamp(34px,5vw,56px);font-weight:900;color:var(--dark);line-height:1.1;margin:0 0 20px;position:relative}
+    .intro-title .hl{position:relative;color:var(--dark2)}
+    .intro-title .hl::after{content:'';position:absolute;bottom:0;left:0;right:0;height:10px;background:var(--main);opacity:.35;z-index:-1}
+    .intro-snippet{font-size:15px;line-height:1.85;color:var(--dark2);margin:0 0 32px;font-weight:400}
+    .intro-snippet strong{font-weight:700;color:var(--dark)}
+    .intro-btns{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    .btn-main{display:inline-flex;align-items:center;gap:8px;height:52px;padding:0 28px;background:var(--main);color:var(--dark)!important;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;border:2px solid var(--dark);border-radius:8px;box-shadow:var(--cs);transition:.17s}
+    .btn-main:hover{box-shadow:2px 2px 0 var(--dark);transform:translate(2px,2px);background:var(--main-dark)}
+    .btn-sec{display:inline-flex;align-items:center;gap:8px;height:52px;padding:0 28px;background:#fff;color:var(--dark)!important;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;border:2px solid var(--dark);border-radius:8px;box-shadow:var(--cs);transition:.17s}
+    .btn-sec:hover{box-shadow:2px 2px 0 var(--dark);transform:translate(2px,2px)}
+    .intro-right{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .mini-card{background:#fff;border:2px solid var(--dark);border-radius:12px;box-shadow:var(--cs);padding:20px 16px;text-align:center;transition:.17s;cursor:default}
+    .mini-card:hover{box-shadow:var(--csh);transform:translate(-2px,-2px)}
+    .mini-emoji{font-size:36px;margin-bottom:8px}
+    .mini-name{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--dark);line-height:1.3}
+    .mini-cat{font-size:10px;color:var(--second-text);font-weight:500;margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+    .scroll-hint{margin-top:40px}
+    .scroll-mouse{display:inline-block;width:24px;height:38px;border:2px solid var(--main);border-radius:12px;position:relative}
+    .scroll-mouse::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--main);border-radius:50%;animation:sa 1.5s infinite}
+    @keyframes sa{0%{top:5px;opacity:1}100%{top:22px;opacity:0}}
+
+    /* STATS */
+    #stats-wrap{background:var(--dark);padding:0}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+    .stat-item{padding:28px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+    .stat-item:last-child{border-right:none}
+    .stat-icon{font-size:24px;margin-bottom:6px}
+    .stat-num{font-family:'Nunito',sans-serif;font-size:32px;font-weight:900;color:var(--main);line-height:1}
+    .stat-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-weight:500;letter-spacing:.04em}
+
+    /* SECTIONS */
+    .sw{padding:70px 0}
+    .sw.bg-white{background:#fff}
+    .sw.bg-bg{background:var(--bg)}
+    .sw.bg-dark{background:var(--dark)}
+    .head-text{text-align:center;margin:0 0 50px}
+    .sec-tag{display:inline-block;background:var(--yellow);border:2px solid var(--dark);box-shadow:2px 2px 0 var(--dark);color:var(--dark);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:4px;margin-bottom:14px}
+    .head-text h2{font-family:'Nunito',sans-serif;font-size:clamp(24px,3.5vw,38px);font-weight:900;color:var(--dark);margin:0 0 12px;position:relative;display:inline-block}
+    .head-text h2::before{content:'';background:#c3e6e478;width:52px;height:52px;border-radius:50%;position:absolute;top:-8px;left:-14px;z-index:-1}
+    .head-text p{font-size:15px;color:var(--second-text);line-height:1.75;max-width:580px;margin:0 auto}
+
+    /* APP CARDS */
+    .apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:28px}
+    .app-card{background:#fff;border:2px solid var(--dark);border-radius:12px;box-shadow:var(--cs);overflow:hidden;display:flex;flex-direction:column;transition:.17s}
+    .app-card:hover{box-shadow:var(--csh);transform:translate(-2px,-2px)}
+    .app-top{height:130px;display:flex;align-items:center;justify-content:center;border-bottom:2px solid var(--dark);overflow:hidden}
+    .app-emoji{font-size:58px;position:relative;z-index:1}
+    .top-u{background:linear-gradient(135deg,#d4f1e8,#b2e8d4)}
+    .top-c{background:linear-gradient(135deg,#d0d8f0,#b8c4e8)}
+    .top-r{background:linear-gradient(135deg,#f0d4f1,#e0b8f0)}
+    .top-g{background:linear-gradient(135deg,#d4ead4,#b8ddb8)}
+    .app-body{padding:20px;flex:1;display:flex;flex-direction:column}
+    .app-badge{display:inline-block;background:var(--main);color:var(--dark);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;border:1.5px solid var(--dark);margin-bottom:10px}
+    .app-card h3{font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;color:var(--dark);line-height:1.3;margin-bottom:10px}
+    .app-card p{font-size:13px;color:var(--second-text);line-height:1.7;flex:1}
+    .app-tags{display:flex;flex-wrap:wrap;gap:5px;margin:14px 0}
+    .tag{background:var(--bg);border:1px solid var(--border);color:var(--body-text);font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px}
+    .app-foot{padding:14px 20px;border-top:2px solid var(--dark);background:var(--bg);display:flex;gap:10px}
+    .btn-play{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 12px;background:var(--dark);color:#fff!important;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;border:2px solid var(--dark);border-radius:6px;box-shadow:3px 3px 0 var(--main);transition:.17s}
+    .btn-play:hover{background:var(--dark2);box-shadow:1px 1px 0 var(--main);transform:translate(2px,2px)}
+    .btn-pp{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 12px;background:#fff;color:var(--dark)!important;font-size:11px;font-weight:600;border:2px solid var(--dark);border-radius:6px;box-shadow:3px 3px 0 var(--border);transition:.17s;white-space:nowrap}
+    .btn-pp:hover{box-shadow:1px 1px 0 var(--border);transform:translate(2px,2px)}
+
+    /* FEATURES */
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}
+    .feat-card{background:#fff;border:2px solid var(--dark);border-radius:12px;box-shadow:var(--cs);padding:28px 22px;text-align:center;transition:.17s}
+    .feat-card:hover{transform:translate(-2px,-2px);box-shadow:var(--csh)}
+    .feat-icon{width:56px;height:56px;background:var(--intro-bg);border:2px solid var(--dark);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px}
+    .feat-card h3{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--dark);margin-bottom:8px}
+    .feat-card p{font-size:13px;color:var(--second-text);line-height:1.6}
+
+    /* ABOUT */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .about-visual{background:var(--intro-bg);border:2px solid var(--dark);border-radius:16px;box-shadow:var(--cs);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:90px;position:relative;overflow:hidden}
+    .about-visual::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,2,9,.03) 10px,rgba(0,2,9,.03) 11px)}
+    .about-badge{position:absolute;bottom:-2px;right:-2px;background:var(--yellow);color:var(--dark);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:10px 18px;border:2px solid var(--dark);border-radius:0 0 14px 0}
+    .sec-tag-inline{display:inline-block;background:var(--yellow);border:2px solid var(--dark);box-shadow:2px 2px 0 var(--dark);color:var(--dark);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:4px;margin-bottom:16px}
+    .about-content h2{font-family:'Nunito',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:900;color:var(--dark);margin-bottom:16px;line-height:1.2}
+    .about-content h2 span{color:var(--main)}
+    .about-content p{font-size:14px;color:var(--second-text);line-height:1.8;margin-bottom:14px}
+    .about-list{margin:20px 0}
+    .about-list li{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--dark);padding:7px 0;border-bottom:1px dotted var(--border)}
+    .about-list li:last-child{border-bottom:none}
+    .chk{width:22px;height:22px;background:var(--main);border:1.5px solid var(--dark);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--dark);font-weight:700;flex-shrink:0}
+    .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .pill{background:#fff;border:2px solid var(--dark);box-shadow:2px 2px 0 var(--dark);color:var(--dark);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:6px 14px;border-radius:6px}
+
+    /* CTA */
+    #cta-wrap{background:var(--main);border-top:2px solid var(--dark);border-bottom:2px solid var(--dark);padding:56px 0;text-align:center}
+    #cta-wrap h2{font-family:'Nunito',sans-serif;font-size:clamp(22px,4vw,40px);font-weight:900;color:var(--dark);margin-bottom:10px}
+    #cta-wrap p{font-size:15px;color:var(--dark2);margin-bottom:28px;font-weight:500}
+    .btn-cta{display:inline-flex;align-items:center;gap:8px;height:54px;padding:0 32px;background:var(--dark);color:#fff!important;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;border:2px solid var(--dark);border-radius:8px;box-shadow:4px 4px 0 var(--dark2);transition:.17s}
+    .btn-cta:hover{box-shadow:2px 2px 0 var(--dark2);transform:translate(2px,2px)}
+
+    /* CONTACT */
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+    .contact-left h2{font-family:'Nunito',sans-serif;font-size:clamp(22px,3vw,34px);font-weight:900;color:var(--dark);margin-bottom:14px}
+    .contact-left p{font-size:14px;color:var(--second-text);line-height:1.8;margin-bottom:28px}
+    .c-cards{display:flex;flex-direction:column;gap:12px}
+    .c-card{background:#fff;border:2px solid var(--dark);border-radius:10px;box-shadow:3px 3px 0 var(--dark);padding:14px 18px;display:flex;align-items:center;gap:14px;transition:.17s}
+    .c-card:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--dark)}
+    .c-icon{width:44px;height:44px;background:var(--intro-bg);border:2px solid var(--dark);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .c-lbl{font-size:10px;color:var(--second-text);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+    .c-val{font-size:14px;font-weight:600;color:var(--dark);margin-top:2px}
+    .c-val a{color:var(--main)}
+    .cf-wrap{background:#fff;border:2px solid var(--dark);border-radius:14px;box-shadow:var(--cs);padding:32px}
+    .cf-wrap h3{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:var(--dark);margin-bottom:24px}
+    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .fg{margin-bottom:16px}
+    .fg label{display:block;font-size:12px;font-weight:600;color:var(--dark);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+    .fg input,.fg textarea,.fg select{width:100%;padding:10px 14px;border:2px solid var(--dark);border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--dark);background:var(--bg);outline:none;transition:box-shadow .17s}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{box-shadow:3px 3px 0 var(--main)}
+    .fg textarea{resize:vertical;min-height:100px}
+    .btn-send{width:100%;height:48px;background:var(--dark);color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;border:2px solid var(--dark);border-radius:8px;box-shadow:4px 4px 0 var(--main);cursor:pointer;transition:.17s}
+    .btn-send:hover{box-shadow:2px 2px 0 var(--main);transform:translate(2px,2px)}
+
+    /* FOOTER */
+    #footer-wrap{background:var(--dark);border-top:2px solid var(--dark);padding:50px 0 0}
+    .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:50px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .foot-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+    .fl-icon{width:36px;height:36px;background:var(--main);border:2px solid rgba(255,255,255,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;color:var(--dark)}
+    .fl-name{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#fff}
+    .fl-by{font-size:11px;color:rgba(255,255,255,.4)}
+    .foot-brand p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.75;max-width:280px}
+    .foot-col h4{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.1em;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--main);display:inline-block}
+    .foot-col ul li{padding:7px 0;border-bottom:1px dotted rgba(255,255,255,.08)}
+    .foot-col ul li:last-child{border-bottom:none}
+    .foot-col ul li a{font-size:13px;color:rgba(255,255,255,.5);transition:.17s}
+    .foot-col ul li a::before{content:'›';margin-right:6px;color:var(--main)}
+    .foot-col ul li a:hover{color:var(--main)}
+    .foot-bottom{padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-bottom p{font-size:12px;color:rgba(255,255,255,.4)}
+    .foot-bottom a{color:var(--main)}
+    .foot-legal{display:flex;gap:20px}
+    .foot-legal a{font-size:12px;color:rgba(255,255,255,.35)}
+    .foot-legal a:hover{color:#fff}
+    .back-top{position:fixed;bottom:24px;right:24px;z-index:999;width:44px;height:44px;background:var(--dark);border:2px solid var(--dark);border-radius:8px;box-shadow:3px 3px 0 var(--main);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;cursor:pointer;opacity:0;pointer-events:none;transition:.17s}
+    .back-top.vis{opacity:1;pointer-events:all}
+    .back-top:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--main);color:#fff}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    .fu{opacity:0}
+    .fu.vis{animation:fadeUp .55s ease both}
+
+    /* RESPONSIVE */
+    @media(max-width:960px){
+      .intro-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:36px}
+      .foot-grid{grid-template-columns:1fr 1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:640px){
+      #main-menu{display:none}
+      .mob-toggle{display:block}
+      .foot-grid{grid-template-columns:1fr;gap:28px}
+      .f-row{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .intro-right{max-width:100%}
+      #intro-wrap{padding-bottom:40px}
+      .cf-wrap{padding:24px 18px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="preloader" id="pre"><div><div class="pl-logo">Next<span>Int</span> Inc</div><div class="pl-bar"><div class="pl-fill"></div></div></div></div>
+
+<nav class="mob-nav" id="mobnav">
+  <button class="mob-close" onclick="cnav()"><i class="fa fa-times"></i></button>
+  <a href="#apps" onclick="cnav()">Apps</a>
+  <a href="#features" onclick="cnav()">Features</a>
+  <a href="#about" onclick="cnav()">About</a>
+  <a href="#contact" onclick="cnav()">Contact</a>
+  <a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener" style="background:var(--main);color:var(--dark)!important;margin-top:10px;" onclick="cnav()">▶ Play Store</a>
+</nav>
+
+<div id="top-bar">
+  <div class="container">
+    <div class="tb-left">🇮🇳 Made in India &nbsp;·&nbsp;<span>4 Apps</span> on Google Play &nbsp;·&nbsp; by <span>Vijay Sonawale</span></div>
+    <div class="tb-right">
+      <a href="mailto:sonawalesvijay@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+      <a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener" title="Play Store"><i class="fa fa-play"></i></a>
+      <a href="https://github.com/vijaysonawale" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+  </div>
+</div>
+
+<header id="header-wrap">
+  <div class="container">
+    <div class="hdr-logo">
+      <a href="#">
+        <div class="logo-box">N</div>
+        <div><div class="logo-name">NextInt Inc</div><div class="logo-by">by Vijay Sonawale</div></div>
+      </a>
+    </div>
+    <nav id="main-menu">
+      <ul>
+        <li><a href="#apps">Apps</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li class="menu-cta"><a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener"><i class="fa fa-play" style="font-size:10px"></i> Play Store</a></li>
+      </ul>
+    </nav>
+    <button class="mob-toggle" onclick="onav()"><i class="fa fa-bars"></i></button>
+  </div>
+</header>
+
+<section id="intro-wrap">
+  <div class="container">
+    <div class="intro-tag">🚀 Android Developer · India</div>
+    <div class="intro-grid">
+      <div class="intro-content">
+        <h1 class="intro-title">Apps Made for<br/><span class="hl">Real India</span></h1>
+        <p class="intro-snippet">Hi, I'm <strong>Vijay Sonawale</strong> — founder of <strong>NextInt Inc</strong>.<br/>I build practical Android apps for Indian shopkeepers, car owners &amp; job seekers. No accounts, no cloud — just apps that work.</p>
+        <div class="intro-btns">
+          <a href="#apps" class="btn-main"><i class="fa fa-mobile-screen"></i> See My Apps</a>
+          <a href="#contact" class="btn-sec"><i class="fa fa-envelope"></i> Contact Me</a>
+        </div>
+        <div class="scroll-hint"><div class="scroll-mouse"></div></div>
+      </div>
+      <div class="intro-right">
+        <div class="mini-card"><div class="mini-emoji">💰</div><div class="mini-name">Udhari Book</div><div class="mini-cat">Finance · Business</div></div>
+        <div class="mini-card"><div class="mini-emoji">🚗</div><div class="mini-name">Car Kundali</div><div class="mini-cat">Automotive · OBD2</div></div>
+        <div class="mini-card"><div class="mini-emoji">🔮</div><div class="mini-name">Aaj Ka Rashifal</div><div class="mini-cat">Astrology · Hindi</div></div>
+        <div class="mini-card"><div class="mini-emoji">🏛️</div><div class="mini-name">GovFitAI</div><div class="mini-cat">Jobs · AI · Quiz</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="stats-wrap">
+  <div class="container" style="padding:0">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-icon">📱</div><div class="stat-num">4</div><div class="stat-lbl">Android Apps</div></div>
+      <div class="stat-item"><div class="stat-icon">🌐</div><div class="stat-num">3+</div><div class="stat-lbl">Languages</div></div>
+      <div class="stat-item"><div class="stat-icon">🔒</div><div class="stat-num">0</div><div class="stat-lbl">Logins Required</div></div>
+      <div class="stat-item"><div class="stat-icon">⭐</div><div class="stat-num">Free</div><div class="stat-lbl">Always Free</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="sw bg-bg" id="apps">
+  <div class="container">
+    <div class="head-text"><div class="sec-tag">📱 My Apps</div><h2>Published on Google Play</h2><p>Each app solves a real everyday problem for Indian users — from tracking customer credit to diagnosing your car engine.</p></div>
+    <div class="apps-grid">
+
+      <article class="app-card fu">
+        <div class="app-top top-u"><div class="app-emoji">💰</div></div>
+        <div class="app-body">
+          <span class="app-badge">Finance · Business</span>
+          <h3>Udhari Book – Cash &amp; GST Calc</h3>
+          <p>Complete business app for Indian shopkeepers &amp; traders. Cash counter, Udhari ledger, daily register, GST calculator — 100% offline, no login needed.</p>
+          <div class="app-tags"><span class="tag">Cash Counter</span><span class="tag">GST Calc</span><span class="tag">Udhari Ledger</span><span class="tag">Daily Register</span><span class="tag">WhatsApp Share</span><span class="tag">Hindi &amp; Marathi</span></div>
+        </div>
+        <div class="app-foot">
+          <a href="https://play.google.com/store/search?q=Udhari+Book+NextInt" target="_blank" rel="noopener" class="btn-play"><i class="fa fa-play" style="font-size:10px"></i> Play Store</a>
+          <a href="https://vijaysonawale.github.io/udharibuuk.html" target="_blank" class="btn-pp"><i class="fa fa-shield-halved" style="font-size:10px"></i> Policy</a>
+        </div>
+      </article>
+
+      <article class="app-card fu">
+        <div class="app-top top-c"><div class="app-emoji">🚗</div></div>
+        <div class="app-body">
+          <span class="app-badge">Automotive · OBD2</span>
+          <h3>Car Kundali – OBD2 Scanner</h3>
+          <p>ELM327 Bluetooth OBD2 scanner for most cars &amp; bikes. Read/clear fault codes, live engine data, performance timer, trip computer and CSV data export.</p>
+          <div class="app-tags"><span class="tag">ELM327 BT</span><span class="tag">DTC Codes</span><span class="tag">Live Dashboard</span><span class="tag">Trip Computer</span><span class="tag">CSV Export</span><span class="tag">0–100 Timer</span></div>
+        </div>
+        <div class="app-foot">
+          <a href="https://play.google.com/store/search?q=Car+Kundali+OBD2+NextInt" target="_blank" rel="noopener" class="btn-play"><i class="fa fa-play" style="font-size:10px"></i> Play Store</a>
+          <a href="https://vijaysonawale.github.io/carkundali.html" target="_blank" class="btn-pp"><i class="fa fa-shield-halved" style="font-size:10px"></i> Policy</a>
+        </div>
+      </article>
+
+      <article class="app-card fu">
+        <div class="app-top top-r"><div class="app-emoji">🔮</div></div>
+        <div class="app-body">
+          <span class="app-badge">Astrology · Lifestyle</span>
+          <h3>Aaj Ka Rashifal &amp; Horoscope</h3>
+          <p>Daily Rashifal for all 12 zodiac signs in Hindi &amp; English. Personalized by Date of Birth — lucky number, lucky colour, daily notifications, offline access.</p>
+          <div class="app-tags"><span class="tag">Hindi Rashifal</span><span class="tag">All 12 Rashis</span><span class="tag">Lucky Number</span><span class="tag">DOB Based</span><span class="tag">Offline</span><span class="tag">Daily Alert</span></div>
+        </div>
+        <div class="app-foot">
+          <a href="https://play.google.com/store/search?q=Aaj+Ka+Rashifal+NextInt" target="_blank" rel="noopener" class="btn-play"><i class="fa fa-play" style="font-size:10px"></i> Play Store</a>
+          <a href="https://vijaysonawale.github.io/rashifal.html" target="_blank" class="btn-pp"><i class="fa fa-shield-halved" style="font-size:10px"></i> Policy</a>
+        </div>
+      </article>
+
+      <article class="app-card fu">
+        <div class="app-top top-g"><div class="app-emoji">🏛️</div></div>
+        <div class="app-body">
+          <span class="app-badge">Jobs · AI · Quiz</span>
+          <h3>GovFitAI – Sarkari Jobs &amp; Quiz</h3>
+          <p>AI-powered government job matching platform. Personalized Sarkari Naukri alerts + GK, GS &amp; Current Affairs MCQ quiz for SSC, Railway, Banking exam prep.</p>
+          <div class="app-tags"><span class="tag">AI Job Match</span><span class="tag">Sarkari Naukri</span><span class="tag">GK Quiz</span><span class="tag">Current Affairs</span><span class="tag">SSC · Railway</span><span class="tag">Instant Alerts</span></div>
+        </div>
+        <div class="app-foot">
+          <a href="https://play.google.com/store/search?q=GovFitAI+NextInt" target="_blank" rel="noopener" class="btn-play"><i class="fa fa-play" style="font-size:10px"></i> Play Store</a>
+          <a href="https://vijaysonawale.github.io/govfitai.html" target="_blank" class="btn-pp"><i class="fa fa-shield-halved" style="font-size:10px"></i> Policy</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="sw bg-white" id="features">
+  <div class="container">
+    <div class="head-text"><div class="sec-tag">✨ Why Choose</div><h2>What Makes These Apps Different</h2><p>Designed specifically for the Indian market — simple, private, and offline-first.</p></div>
+    <div class="feat-grid">
+      <div class="feat-card fu"><div class="feat-icon">🔒</div><h3>100% Private</h3><p>All data stays on your device. No server, no cloud upload, no tracking. Your business data is only yours.</p></div>
+      <div class="feat-card fu"><div class="feat-icon">🌐</div><h3>Hindi · Marathi · English</h3><p>Multi-language support with reminders and messages in the language you prefer most.</p></div>
+      <div class="feat-card fu"><div class="feat-icon">📵</div><h3>No Login Needed</h3><p>Install and start using instantly. No account creation, no OTP, no email required — ever.</p></div>
+      <div class="feat-card fu"><div class="feat-icon">📶</div><h3>Works Offline</h3><p>Most features work without internet. Perfect for areas with slow or no connectivity.</p></div>
+      <div class="feat-card fu"><div class="feat-icon">💡</div><h3>Lightweight &amp; Fast</h3><p>Optimized for entry-level Android devices. Smooth performance even on 2GB RAM phones.</p></div>
+      <div class="feat-card fu"><div class="feat-icon">💸</div><h3>Always Free</h3><p>No hidden subscription, no premium lock. All core features are free for every user on Play Store.</p></div>
+    </div>
+  </div>
+</section>
+
+<div id="cta-wrap">
+  <div class="container">
+    <h2>All 4 Apps — Free on Google Play</h2>
+    <p>No login. No subscription. No data collection. Just install and use.</p>
+    <a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener" class="btn-cta"><i class="fa fa-play" style="font-size:13px"></i> View All Apps on Play Store</a>
+  </div>
+</div>
+
+<section class="sw bg-bg" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual"><span style="position:relative;z-index:1">👨‍💻</span><div class="about-badge">📍 Ichalkaranji, MH</div></div>
+      <div class="about-content">
+        <div class="sec-tag-inline">About Me</div>
+        <h2>Vijay Sonawale &amp;<br/><span>NextInt Inc</span></h2>
+        <p>I'm an independent Android developer from Ichalkaranji, Maharashtra. I build apps that solve real everyday problems for Indian users — shopkeepers, drivers, students, and job seekers.</p>
+        <p>Under my company <strong>NextInt Inc</strong>, all apps are published on Google Play with a privacy-first approach. Everything runs on your device — no accounts, no data collection.</p>
+        <ul class="about-list">
+          <li><span class="chk">✔</span>4 Android apps published on Google Play</li>
+          <li><span class="chk">✔</span>Hindi, Marathi &amp; English support</li>
+          <li><span class="chk">✔</span>Privacy-first: no login, no data upload</li>
+          <li><span class="chk">✔</span>Designed for Indian market needs</li>
+          <li><span class="chk">✔</span>All apps completely free to use</li>
+        </ul>
+        <div class="pills"><span class="pill">👤 Vijay Sonawale</span><span class="pill">🏢 NextInt Inc</span><span class="pill">📍 Maharashtra 🇮🇳</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sw bg-white" id="contact">
+  <div class="container">
+    <div class="head-text"><div class="sec-tag">✉ Get In Touch</div><h2>Contact &amp; Support</h2><p>Bug report? Feature request? Collaboration? I usually reply within 24 hours.</p></div>
+    <div class="contact-grid">
+      <div class="contact-left">
+        <h2>Let's Talk</h2>
+        <p>For app support, privacy policy questions, or any feedback — feel free to reach out directly. I read every message.</p>
+        <div class="c-cards">
+          <div class="c-card"><div class="c-icon">✉️</div><div><div class="c-lbl">Email</div><div class="c-val"><a href="mailto:sonawalesvijay@gmail.com">sonawalesvijay@gmail.com</a></div></div></div>
+          <div class="c-card"><div class="c-icon">🏢</div><div><div class="c-lbl">Company</div><div class="c-val">NextInt Inc</div></div></div>
+          <div class="c-card"><div class="c-icon">📍</div><div><div class="c-lbl">Location</div><div class="c-val">Ichalkaranji, Maharashtra, India</div></div></div>
+          <div class="c-card"><div class="c-icon">▶️</div><div><div class="c-lbl">Google Play</div><div class="c-val"><a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener">NextInt Inc Developer Page</a></div></div></div>
+        </div>
+      </div>
+      <div class="cf-wrap">
+        <h3>Send a Message</h3>
+        <div class="f-row">
+          <div class="fg"><label for="fn">Your Name</label><input type="text" id="fn" placeholder="Rahul Sharma"/></div>
+          <div class="fg"><label for="fe">Email</label><input type="email" id="fe" placeholder="rahul@gmail.com"/></div>
+        </div>
+        <div class="fg">
+          <label for="fa">Related App</label>
+          <select id="fa"><option value="">Select an app…</option><option>Udhari Book – Cash &amp; GST Calc</option><option>Car Kundali – OBD2 Scanner</option><option>Aaj Ka Rashifal &amp; Horoscope</option><option>GovFitAI – Sarkari Jobs &amp; Quiz</option><option>General / Other</option></select>
+        </div>
+        <div class="fg"><label for="fm">Message</label><textarea id="fm" placeholder="Describe your issue, feedback or question…"></textarea></div>
+        <button class="btn-send" onclick="smail()"><i class="fa fa-paper-plane"></i> &nbsp;Send Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer-wrap">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-logo"><div class="fl-icon">N</div><div><div class="fl-name">NextInt Inc</div><div class="fl-by">by Vijay Sonawale</div></div></div>
+        <p>Building practical Android apps for everyday Indian users. Privacy-first, offline-first — no logins, no data collection.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Apps</h4>
+        <ul><li><a href="#apps">Udhari Book</a></li><li><a href="#apps">Car Kundali</a></li><li><a href="#apps">Aaj Ka Rashifal</a></li><li><a href="#apps">GovFitAI</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h4>Privacy Policies</h4>
+        <ul>
+          <li><a href="https://vijaysonawale.github.io/udharibuuk.html" target="_blank">Udhari Book</a></li>
+          <li><a href="https://vijaysonawale.github.io/carkundali.html" target="_blank">Car Kundali</a></li>
+          <li><a href="https://vijaysonawale.github.io/rashifal.html" target="_blank">Rashifal</a></li>
+          <li><a href="https://vijaysonawale.github.io/govfitai.html" target="_blank">GovFitAI</a></li>
+          <li><a href="#contact">Contact &amp; Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 <a href="#about">NextInt Inc</a> · <a href="#about">Vijay Sonawale</a> · Ichalkaranji, Maharashtra 🇮🇳</p>
+      <div class="foot-legal"><a href="#apps">All Apps</a><a href="mailto:sonawalesvijay@gmail.com">Email</a><a href="https://play.google.com/store/apps/developer?id=NextInt+Inc" target="_blank" rel="noopener">Play Store</a></div>
+    </div>
+  </div>
+</footer>
+
+<a href="#" class="back-top" id="btt"><i class="fa fa-chevron-up"></i></a>
+
+<script>
+  window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('pre').classList.add('hidden')},1400)});
+  function onav(){document.getElementById('mobnav').classList.add('open')}
+  function cnav(){document.getElementById('mobnav').classList.remove('open')}
+  const btt=document.getElementById('btt');
+  window.addEventListener('scroll',()=>{btt.classList.toggle('vis',scrollY>300)});
+  btt.addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:'smooth'})});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+  function smail(){
+    const n=document.getElementById('fn').value.trim(),em=document.getElementById('fe').value.trim(),a=document.getElementById('fa').value,m=document.getElementById('fm').value.trim();
+    if(!n||!m){alert('Please fill in your name and message.');return}
+    const s=encodeURIComponent('App Inquiry'+(a?' – '+a:'')+' | '+n),b=encodeURIComponent('Name: '+n+'\nEmail: '+em+'\nApp: '+(a||'General')+'\n\n'+m);
+    location.href='mailto:sonawalesvijay@gmail.com?subject='+s+'&body='+b;
+  }
+</script>
+</body>
+</html>
