@@ -258,7 +258,7 @@
   <div class="container">
     <div class="tb-left">🇮🇳 Made in India &nbsp;·&nbsp;<span>3 Apps</span> on Google Play &nbsp;·&nbsp; by <span>Vijay Sonawale</span></div>
     <div class="tb-right">
-      <a href="/cdn-cgi/l/email-protection#b1c2dedfd0c6d0ddd4c2c7d8dbd0c8f1d6dcd0d8dd9fd2dedc" title="Email"><i class="fa fa-envelope"></i></a>
+      <a href="javascript:void(0)" onclick="eml()" title="Email"><i class="fa fa-envelope"></i></a>
       <a href="https://play.google.com/store/apps/details?id=com.nextintinc.udhari_book_cash_gst_calc" target="_blank" rel="noopener" title="Play Store"><i class="fa fa-play"></i></a>
       <a href="https://github.com/vijaysonawale" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
     </div>
@@ -434,7 +434,7 @@
         <h2>Let's Talk</h2>
         <p>For app support, privacy policy questions, or any feedback — feel free to reach out directly. I read every message.</p>
         <div class="c-cards">
-          <div class="c-card"><div class="c-icon">✉️</div><div><div class="c-lbl">Email</div><div class="c-val"><a href="/cdn-cgi/l/email-protection#e4978b8a859385888197928d8e859da48389858d88ca878b89"><span class="__cf_email__" data-cfemail="6e1d01000f190f020b1d1807040f172e09030f0702400d0103">[email&#160;protected]</span></a></div></div></div>
+          <div class="c-card"><div class="c-icon">✉️</div><div><div class="c-lbl">Email</div><div class="c-val"><a href="javascript:void(0)" onclick="eml()" id="emailDisplay">sonawalesvijay&#64;gmail&#46;com</a></div></div></div>
           <div class="c-card"><div class="c-icon">🏢</div><div><div class="c-lbl">Company</div><div class="c-val">NextInt Inc</div></div></div>
           <div class="c-card"><div class="c-icon">📍</div><div><div class="c-lbl">Location</div><div class="c-val">Ichalkaranji, Maharashtra, India</div></div></div>
           <div class="c-card"><div class="c-icon">▶️</div><div><div class="c-lbl">Google Play</div><div class="c-val"><a href="https://play.google.com/store/apps/details?id=com.nextintinc.udhari_book_cash_gst_calc" target="_blank" rel="noopener">View Apps on Play Store</a></div></div></div>
@@ -480,14 +480,16 @@
     </div>
     <div class="foot-bottom">
       <p>© 2026 <a href="#about">NextInt Inc</a> · <a href="#about">Vijay Sonawale</a> · Ichalkaranji, Maharashtra 🇮🇳</p>
-      <div class="foot-legal"><a href="#apps">All Apps</a><a href="/cdn-cgi/l/email-protection#f1829e9f9086909d948287989b9088b1969c90989ddf929e9c">Email</a><a href="https://play.google.com/store/apps/details?id=com.nextintinc.udhari_book_cash_gst_calc" target="_blank" rel="noopener">Play Store</a></div>
+      <div class="foot-legal"><a href="#apps">All Apps</a><a href="javascript:void(0)" onclick="eml()">Email</a><a href="https://play.google.com/store/apps/details?id=com.nextintinc.udhari_book_cash_gst_calc" target="_blank" rel="noopener">Play Store</a></div>
     </div>
   </div>
 </footer>
 
 <a href="#" class="back-top" id="btt"><i class="fa fa-chevron-up"></i></a>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+  var _e = ['sonawalesvijay','gmail.com'].join('@');
+  function eml(){ window.location.href = 'mailto:' + _e; }
   window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('pre').classList.add('hidden')},1400)});
   function onav(){document.getElementById('mobnav').classList.add('open')}
   function cnav(){document.getElementById('mobnav').classList.remove('open')}
@@ -497,4 +499,11 @@
   const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.12});
   document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
   function smail(){
-    const n=document.getElementById('fn').value.trim(),em=document.getElementById('fe').value.trim(),a=document.getElementById('fa').value,m=document.getElementById('f
+    const n=document.getElementById('fn').value.trim(),em=document.getElementById('fe').value.trim(),a=document.getElementById('fa').value,m=document.getElementById('fm').value.trim();
+    if(!n||!m){alert('Please fill in your name and message.');return}
+    const s=encodeURIComponent('App Inquiry'+(a?' - '+a:'')+' | '+n),b=encodeURIComponent('Name: '+n+'\nEmail: '+em+'\nApp: '+(a||'General')+'\n\n'+m);
+    location.href='mailto:'+_e+'?subject='+s+'&body='+b;
+  }
+</script>
+</body>
+</html>
