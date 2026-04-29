@@ -1,364 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Privacy Policy – Rummy Jodi</title>
-  <meta name="description" content="Privacy Policy for Rummy Jodi – India's skill-based card game app by Nextintinc." />
+  <meta name="description" content="Privacy Policy for Rummy Jodi – India's fast skill-based card game by Nextintinc."/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
-      line-height: 1.7;
-      padding: 0 16px;
-    }
-
-    .container {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 48px 0 80px;
-    }
-
-    /* Header */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 40px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid #21262d;
-    }
-    .logo {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #6c63ff, #a855f7);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      flex-shrink: 0;
-    }
-    .header-text h1 {
-      font-size: 26px;
-      font-weight: 800;
-      color: #f0f6fc;
-      line-height: 1.2;
-    }
-    .header-text p {
-      font-size: 14px;
-      color: #8b949e;
-      margin-top: 4px;
-    }
-
-    /* Badge */
-    .badge-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .badge-purple { background: rgba(108,99,255,0.15); color: #a78bfa; border: 1px solid rgba(108,99,255,0.3); }
-    .badge-green  { background: rgba(34,197,94,0.12);  color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-    .badge-blue   { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-
-    /* Sections */
-    .section {
-      margin-bottom: 36px;
-      padding: 24px;
-      background: #161b22;
-      border: 1px solid #21262d;
-      border-radius: 12px;
-    }
-    .section h2 {
-      font-size: 17px;
-      font-weight: 700;
-      color: #f0f6fc;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .section h2 .num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      background: rgba(108,99,255,0.2);
-      color: #a78bfa;
-      border-radius: 50%;
-      font-size: 12px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-    .section p, .section li {
-      font-size: 14.5px;
-      color: #8b949e;
-      line-height: 1.75;
-    }
-    .section ul {
-      padding-left: 20px;
-      margin-top: 8px;
-    }
-    .section li { margin-bottom: 4px; }
-
-    /* Highlight box */
-    .highlight {
-      background: rgba(168,85,247,0.08);
-      border: 1px solid rgba(168,85,247,0.2);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-top: 12px;
-      font-size: 14px;
-      color: #c4b5fd;
-    }
-
-    /* Warning box */
-    .warning {
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.2);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-top: 12px;
-      font-size: 14px;
-      color: #fde68a;
-    }
-
-    /* Contact card */
-    .contact-card {
-      background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(168,85,247,0.08));
-      border: 1px solid rgba(108,99,255,0.25);
-      border-radius: 12px;
-      padding: 24px;
-      margin-top: 40px;
-      text-align: center;
-    }
-    .contact-card h3 {
-      font-size: 18px;
-      font-weight: 800;
-      color: #f0f6fc;
-      margin-bottom: 8px;
-    }
-    .contact-card p { font-size: 14px; color: #8b949e; }
-    .contact-card a {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 10px 24px;
-      background: linear-gradient(135deg, #6c63ff, #a855f7);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 56px;
-      padding-top: 24px;
-      border-top: 1px solid #21262d;
-      text-align: center;
-      font-size: 13px;
-      color: #484f58;
-    }
-    footer a { color: #6c63ff; text-decoration: none; }
-
-    @media (max-width: 480px) {
-      .header { flex-direction: column; align-items: flex-start; }
-      .header-text h1 { font-size: 22px; }
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.75;padding:0 16px}
+    .container{max-width:780px;margin:0 auto;padding:48px 0 80px}
+    .header{display:flex;align-items:center;gap:16px;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #21262d}
+    .logo{width:56px;height:56px;background:linear-gradient(135deg,#6c63ff,#a855f7);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+    .header-text h1{font-size:26px;font-weight:800;color:#f0f6fc}
+    .header-text p{font-size:14px;color:#8b949e;margin-top:4px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+    .badge{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid}
+    .bp{background:rgba(108,99,255,.15);color:#a78bfa;border-color:rgba(108,99,255,.3)}
+    .bg{background:rgba(34,197,94,.12);color:#4ade80;border-color:rgba(34,197,94,.25)}
+    .bb{background:rgba(59,130,246,.12);color:#60a5fa;border-color:rgba(59,130,246,.25)}
+    .br{background:rgba(239,68,68,.12);color:#f87171;border-color:rgba(239,68,68,.25)}
+    .sec{margin-bottom:28px;padding:22px;background:#161b22;border:1px solid #21262d;border-radius:12px}
+    .sec h2{font-size:16px;font-weight:800;color:#f0f6fc;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:rgba(108,99,255,.2);color:#a78bfa;border-radius:50%;font-size:11px;font-weight:800;flex-shrink:0}
+    .sec p,.sec li{font-size:14px;color:#8b949e;line-height:1.8}
+    .sec ul,.sec ol{padding-left:20px;margin-top:8px}
+    .sec li{margin-bottom:4px}
+    .box{border-radius:8px;padding:13px 15px;margin-top:12px;font-size:13.5px}
+    .box-blue{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd}
+    .box-yellow{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:#fde68a}
+    .box-purple{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:#c4b5fd}
+    .box-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+    .contact-card{background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(168,85,247,.08));border:1px solid rgba(108,99,255,.25);border-radius:12px;padding:28px;margin-top:36px;text-align:center}
+    .contact-card h3{font-size:20px;font-weight:800;color:#f0f6fc;margin-bottom:10px}
+    .contact-card p{font-size:14px;color:#8b949e}
+    .btn{display:inline-block;margin-top:16px;padding:11px 28px;background:linear-gradient(135deg,#6c63ff,#a855f7);color:#fff;text-decoration:none;border-radius:8px;font-weight:700;font-size:14px}
+    .del-box{background:#161b22;border:1px solid #f87171;border-radius:10px;padding:20px;margin-top:28px}
+    .del-box h3{color:#f87171;font-size:16px;font-weight:800;margin-bottom:10px}
+    .del-box ol{padding-left:20px;color:#8b949e;font-size:14px;line-height:1.8}
+    footer{margin-top:52px;padding-top:20px;border-top:1px solid #21262d;text-align:center;font-size:13px;color:#484f58}
+    a{color:#a78bfa;text-decoration:none}
+    a:hover{text-decoration:underline}
+    strong.w{color:#c9d1d9}
+    @media(max-width:480px){.header{flex-direction:column;align-items:flex-start}.header-text h1{font-size:21px}}
   </style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
 
-    <!-- Header -->
-    <div class="header">
-      <div class="logo">🃏</div>
-      <div class="header-text">
-        <h1>Privacy Policy</h1>
-        <p>Rummy Jodi &nbsp;·&nbsp; Nextintinc &nbsp;·&nbsp; Last updated: April 27, 2026</p>
-      </div>
+  <div class="header">
+    <div class="logo">🃏</div>
+    <div class="header-text">
+      <h1>Privacy Policy</h1>
+      <p>Rummy Jodi &nbsp;·&nbsp; Nextintinc &nbsp;·&nbsp; Last updated: April 27, 2026</p>
     </div>
-
-    <!-- Badges -->
-    <div class="badge-row">
-      <span class="badge badge-purple">🇮🇳 India Only</span>
-      <span class="badge badge-green">18+ Adults</span>
-      <span class="badge badge-blue">Skill-Based Game</span>
-      <span class="badge badge-purple">RMG Compliant</span>
-    </div>
-
-    <!-- Section 1 -->
-    <div class="section">
-      <h2><span class="num">1</span> Introduction</h2>
-      <p>This Privacy Policy describes how <strong style="color:#f0f6fc">Nextintinc</strong> ("we", "us", or "our") collects, uses, and protects information when you use the <strong style="color:#f0f6fc">Rummy Jodi</strong> mobile application ("App"). By using the App, you agree to the practices described in this policy.</p>
-    </div>
-
-    <!-- Section 2 -->
-    <div class="section">
-      <h2><span class="num">2</span> Information We Collect</h2>
-      <p>We collect the following information when you use the App:</p>
-      <ul>
-        <li><strong style="color:#c9d1d9">Identity data:</strong> name, email address (via Google Sign-In)</li>
-        <li><strong style="color:#c9d1d9">Profile data:</strong> display name chosen by you</li>
-        <li><strong style="color:#c9d1d9">Device data:</strong> device model, OS version, Google Advertising ID (GAID)</li>
-        <li><strong style="color:#c9d1d9">Location data:</strong> precise GPS coordinates — collected <em>only</em> to enforce geographic restrictions mandated by Indian gaming law</li>
-        <li><strong style="color:#c9d1d9">Usage data:</strong> game sessions, scores, session duration</li>
-        <li><strong style="color:#c9d1d9">Financial data:</strong> wallet balance, withdrawal requests, UPI ID (only when you submit a withdrawal)</li>
-      </ul>
-      <div class="highlight">
-        ℹ️ We do <strong>not</strong> access your contacts, camera, microphone, SMS, or files.
-      </div>
-    </div>
-
-    <!-- Section 3 -->
-    <div class="section">
-      <h2><span class="num">3</span> How We Use Your Information</h2>
-      <ul>
-        <li>Create and manage your account</li>
-        <li>Verify eligibility and enforce geographic restrictions as required by Indian law</li>
-        <li>Process prize payouts and UPI withdrawal requests</li>
-        <li>Detect and prevent fraud, cheating, and multi-accounting</li>
-        <li>Serve advertisements via Google AdMob</li>
-        <li>Send important account and legal notifications</li>
-        <li>Comply with Indian tax reporting obligations (TDS under Income Tax Act)</li>
-      </ul>
-    </div>
-
-    <!-- Section 4 -->
-    <div class="section">
-      <h2><span class="num">4</span> Location Data (Critical Disclosure)</h2>
-      <p>We collect your device's <strong style="color:#c9d1d9">precise GPS location</strong> solely to determine whether real-money gaming is legally available in your state.</p>
-      <div class="warning">
-        ⚠️ The following states are restricted under applicable Indian law: <strong>Andhra Pradesh, Assam, Nagaland, Odisha, Sikkim, and Telangana</strong>. Users in these states may only access practice/entertainment mode.
-      </div>
-      <p style="margin-top:12px">Location is checked at app launch. <strong style="color:#c9d1d9">It is NOT stored on our servers</strong> beyond what is necessary for this single check. We do not track your movements or use location for advertising.</p>
-    </div>
-
-    <!-- Section 5 -->
-    <div class="section">
-      <h2><span class="num">5</span> Data Sharing</h2>
-      <p>We do <strong style="color:#f0f6fc">not sell</strong> your personal data. We share data only with:</p>
-      <ul>
-        <li><strong style="color:#c9d1d9">Google Firebase</strong> — authentication, Firestore database</li>
-        <li><strong style="color:#c9d1d9">Google AdMob</strong> — serving advertisements</li>
-        <li><strong style="color:#c9d1d9">UPI payment processors</strong> — processing withdrawal requests</li>
-        <li><strong style="color:#c9d1d9">Legal authorities</strong> — when required by applicable Indian law (IT Act, PMLA, Income Tax)</li>
-      </ul>
-    </div>
-
-    <!-- Section 6 -->
-    <div class="section">
-      <h2><span class="num">6</span> Google AdMob & Advertising</h2>
-      <p>The App uses <strong style="color:#c9d1d9">Google AdMob</strong> to display advertisements. AdMob may use your Advertising ID and device signals to serve personalized ads.</p>
-      <div class="highlight">
-        💡 To opt out of personalized ads:<br>
-        <strong>Device Settings → Google → Ads → "Opt out of Ads Personalization"</strong>
-      </div>
-      <p style="margin-top:10px">This App is for adults (18+) only and complies with Google's Families Policy. We display rewarded ads (optional, grants timer extension) and banner/interstitial ads during gameplay.</p>
-    </div>
-
-    <!-- Section 7 -->
-    <div class="section">
-      <h2><span class="num">7</span> Data Retention</h2>
-      <ul>
-        <li>Account data: retained while your account is active + 90 days after deletion (fraud prevention)</li>
-        <li>Financial/transaction records: retained for a minimum of <strong style="color:#c9d1d9">7 years</strong> as required by Indian law (Income Tax Act, GST regulations)</li>
-        <li>Location checks: not stored beyond the current session</li>
-      </ul>
-    </div>
-
-    <!-- Section 8 -->
-    <div class="section">
-      <h2><span class="num">8</span> Data Security</h2>
-      <ul>
-        <li>TLS encryption for all data in transit</li>
-        <li>Firebase Security Rules for data at rest</li>
-        <li>Restricted internal access to personal data</li>
-        <li>Regular security reviews</li>
-      </ul>
-      <p style="margin-top:8px">Despite these measures, no system is 100% secure. Please protect your Google account credentials.</p>
-    </div>
-
-    <!-- Section 9 -->
-    <div class="section">
-      <h2><span class="num">9</span> Children's Privacy</h2>
-      <p>This App is strictly for users aged <strong style="color:#f0f6fc">18 and above</strong>. We do not knowingly collect personal data from minors. If you believe a minor has registered, please contact us at <a href="mailto:sonawalesvijay@gmail.com" style="color:#a78bfa">sonawalesvijay@gmail.com</a> and we will delete the account within 48 hours.</p>
-    </div>
-
-    <!-- Section 10 -->
-    <div class="section">
-      <h2><span class="num">10</span> Your Rights</h2>
-      <p>You have the right to:</p>
-      <ul>
-        <li>Access your personal data</li>
-        <li>Correct inaccurate data</li>
-        <li>Request deletion of your account and personal data</li>
-        <li>Withdraw consent for marketing communications</li>
-        <li>Data portability</li>
-      </ul>
-      <p style="margin-top:8px">Contact <a href="mailto:sonawalesvijay@gmail.com" style="color:#a78bfa">sonawalesvijay@gmail.com</a> to exercise these rights. We respond within 30 days.</p>
-    </div>
-
-    <!-- Section 11 -->
-    <div class="section">
-      <h2><span class="num">11</span> Account & Data Deletion</h2>
-      <p>To delete your account and personal data:</p>
-      <ol style="padding-left:20px; margin-top:8px; color:#8b949e; font-size:14.5px; line-height:1.75">
-        <li>Email <a href="mailto:sonawalesvijay@gmail.com" style="color:#a78bfa">sonawalesvijay@gmail.com</a></li>
-        <li>Use subject: <strong style="color:#c9d1d9">"Delete My Account"</strong></li>
-        <li>Send from your registered email address</li>
-      </ol>
-      <p style="margin-top:10px">We will process your request within <strong style="color:#c9d1d9">7 business days</strong>. Note: Financial records required by law will be retained for the legally mandated period.</p>
-    </div>
-
-    <!-- Section 12 -->
-    <div class="section">
-      <h2><span class="num">12</span> Grievance Officer</h2>
-      <p>In accordance with the <strong style="color:#c9d1d9">Information Technology Act, 2000</strong> and the <strong style="color:#c9d1d9">IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021</strong>:</p>
-      <div class="highlight" style="margin-top:12px">
-        <strong style="color:#f0f6fc">Grievance Officer:</strong> Vijay Sonawale<br>
-        <strong style="color:#f0f6fc">Email:</strong> <a href="mailto:sonawalesvijay@gmail.com" style="color:#a78bfa">sonawalesvijay@gmail.com</a><br>
-        <strong style="color:#f0f6fc">Response time:</strong> Within 48 hours of receipt
-      </div>
-    </div>
-
-    <!-- Section 13 -->
-    <div class="section">
-      <h2><span class="num">13</span> Changes to This Policy</h2>
-      <p>We may update this Privacy Policy periodically. We will notify you of material changes via the App. Continued use after notification constitutes acceptance of the updated policy. The "Last updated" date at the top of this page reflects the most recent revision.</p>
-    </div>
-
-    <!-- Contact Card -->
-    <div class="contact-card">
-      <h3>Have Questions?</h3>
-      <p>For all privacy-related questions, data requests, or grievances — we're here to help.</p>
-      <a href="mailto:sonawalesvijay@gmail.com">✉️ sonawalesvijay@gmail.com</a>
-      <p style="margin-top:12px; font-size:13px; color:#484f58">Nextintinc — Rummy Jodi, India</p>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      <p>© 2026 Nextintinc. All rights reserved.</p>
-      <p style="margin-top:6px">
-        Rummy Jodi is a skill-based game. Real-money features available only in eligible Indian states (18+).
-      </p>
-    </footer>
-
   </div>
+
+  <div class="badges">
+    <span class="badge bp">🇮🇳 India Only</span>
+    <span class="badge bg">18+ Adults</span>
+    <span class="badge bb">Skill-Based RMG</span>
+    <span class="badge br">No Bank Details Collected</span>
+    <span class="badge bp">UPI Withdrawals Only</span>
+  </div>
+
+  <!-- 1 -->
+  <div class="sec">
+    <h2><span class="num">1</span> Introduction &amp; Scope</h2>
+    <p>This Privacy Policy describes how <strong class="w">Nextintinc</strong> ("we", "us", or "our") collects, uses, processes, and protects your personal information when you use the <strong class="w">Rummy Jodi</strong> mobile application ("App"). This policy applies to all users of Rummy Jodi and complies with:</p>
+    <ul>
+      <li>Information Technology Act, 2000</li>
+      <li>IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021</li>
+      <li>Digital Personal Data Protection (DPDP) Act, 2023</li>
+      <li>Applicable Indian gaming and tax regulations</li>
+    </ul>
+    <p style="margin-top:10px">By using the App, you consent to the practices described in this policy.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="sec">
+    <h2><span class="num">2</span> Information We Collect</h2>
+    <ul>
+      <li><strong class="w">Identity:</strong> Name and email address (via Google Sign-In)</li>
+      <li><strong class="w">Profile:</strong> Display name chosen by you</li>
+      <li><strong class="w">Device:</strong> Device model, OS version, Google Advertising ID (GAID)</li>
+      <li><strong class="w">Location:</strong> Precise GPS — collected <em>only</em> to enforce geographic restrictions required by Indian law</li>
+      <li><strong class="w">Usage:</strong> Game sessions, scores, session duration</li>
+      <li><strong class="w">Financial:</strong> Wallet balance, withdrawal request amounts, UPI ID — <em>collected only when you submit a withdrawal request</em></li>
+    </ul>
+    <div class="box box-blue" style="margin-top:12px">
+      ✅ We do <strong>NOT</strong> collect bank account numbers, IFSC codes, Aadhaar numbers, PAN numbers, passwords, contacts, SMS, camera, microphone, or files.
+    </div>
+    <div class="box box-blue" style="margin-top:8px">
+      💳 <strong>Payment method:</strong> Rummy Jodi only supports <strong>UPI withdrawals</strong>. We never ask for or store bank account details.
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="sec">
+    <h2><span class="num">3</span> How We Use Your Information</h2>
+    <ul>
+      <li>Create and manage your Rummy Jodi account</li>
+      <li>Verify age eligibility (18+) and geographic eligibility</li>
+      <li>Enforce geographic restrictions mandated by Indian law</li>
+      <li>Process prize winnings and UPI withdrawal requests</li>
+      <li>Detect and prevent fraud, cheating, and multi-accounting</li>
+      <li>Display advertisements via Google AdMob</li>
+      <li>Send important account and legal notifications</li>
+      <li>Comply with Indian tax obligations (TDS reporting under Income Tax Act, 1961)</li>
+    </ul>
+  </div>
+
+  <!-- 4 -->
+  <div class="sec">
+    <h2><span class="num">4</span> Location Data — Critical Disclosure</h2>
+    <p>We collect your device's <strong class="w">precise GPS location</strong> exclusively to determine whether you are in an Indian state where real-money gaming is legally permitted.</p>
+    <div class="box box-yellow" style="margin-top:12px">
+      ⚠️ <strong>Restricted States:</strong> Andhra Pradesh, Assam, Nagaland, Odisha, Sikkim, and Telangana. Users in these states can only access the free entertainment/practice mode — no real-money features are enabled.
+    </div>
+    <ul style="margin-top:12px">
+      <li>Location is checked only at app launch</li>
+      <li>Location data is <strong class="w">NOT stored on our servers</strong> beyond this single eligibility check</li>
+      <li>We do not track your movements</li>
+      <li>Location is never used for advertising targeting</li>
+    </ul>
+  </div>
+
+  <!-- 5 -->
+  <div class="sec">
+    <h2><span class="num">5</span> Data Sharing</h2>
+    <p>We do <strong class="w">NOT sell</strong> your personal data to any third party. We share data only with:</p>
+    <ul>
+      <li><strong class="w">Google Firebase</strong> — authentication and database services</li>
+      <li><strong class="w">Google AdMob</strong> — serving in-app advertisements</li>
+      <li><strong class="w">UPI payment processors</strong> — processing withdrawal requests (UPI ID only)</li>
+      <li><strong class="w">Government / legal authorities</strong> — when required by Indian law (IT Act, PMLA, Income Tax Act)</li>
+    </ul>
+    <p style="margin-top:8px">All third-party services operate under their own privacy policies.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="sec">
+    <h2><span class="num">6</span> Google AdMob &amp; Advertising</h2>
+    <p>Rummy Jodi uses <strong class="w">Google AdMob</strong> to display ads. AdMob may use your Advertising ID (GAID) and device signals to serve relevant ads.</p>
+    <p style="margin-top:8px">Ad types used:</p>
+    <ul>
+      <li><strong class="w">Banner ads</strong> — displayed during gameplay</li>
+      <li><strong class="w">Interstitial ads</strong> — shown between sessions</li>
+      <li><strong class="w">Rewarded ads</strong> — optional; watching grants timer extension (in-game benefit)</li>
+    </ul>
+    <div class="box box-purple" style="margin-top:12px">
+      💡 To opt out of personalized ads:<br>
+      <strong>Settings → Google → Ads → "Opt out of Ads Personalization"</strong>
+    </div>
+    <p style="margin-top:8px">This App targets adults (18+) only and complies with Google's Families Policy.</p>
+  </div>
+
+  <!-- 7 -->
+  <div class="sec">
+    <h2><span class="num">7</span> Data Retention</h2>
+    <ul>
+      <li><strong class="w">Account data:</strong> Retained while active + 90 days after deletion (fraud prevention)</li>
+      <li><strong class="w">Financial/transaction records:</strong> Retained for minimum <strong class="w">7 years</strong> as required by the Income Tax Act, 1961 and GST regulations</li>
+      <li><strong class="w">Location check:</strong> Not stored beyond the current session</li>
+      <li><strong class="w">Gameplay data:</strong> Retained for 12 months for dispute resolution</li>
+    </ul>
+  </div>
+
+  <!-- 8 -->
+  <div class="sec">
+    <h2><span class="num">8</span> Data Security</h2>
+    <ul>
+      <li>TLS/HTTPS encryption for all data in transit</li>
+      <li>Google Firebase Security Rules for data at rest</li>
+      <li>Restricted internal access to personal data (need-to-know basis)</li>
+      <li>Regular security reviews</li>
+      <li>No plaintext storage of sensitive information</li>
+    </ul>
+    <p style="margin-top:8px">Despite these measures, no system is 100% secure. Please protect your Google account credentials.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="sec">
+    <h2><span class="num">9</span> Children's Privacy</h2>
+    <p>Rummy Jodi is strictly for users aged <strong class="w">18 and above</strong>. We do not knowingly collect personal data from minors. If you believe a minor has registered, contact us immediately at <a href="mailto:sonawalesvijay@gmail.com">sonawalesvijay@gmail.com</a>. We will delete the account within 48 hours.</p>
+  </div>
+
+  <!-- 10 -->
+  <div class="sec">
+    <h2><span class="num">10</span> Your Rights (DPDP Act 2023)</h2>
+    <p>Under the Digital Personal Data Protection Act, 2023, you have the right to:</p>
+    <ul>
+      <li>Access your personal data held by us</li>
+      <li>Correct or update inaccurate personal data</li>
+      <li>Request erasure (deletion) of your personal data</li>
+      <li>Withdraw consent for data processing</li>
+      <li>Nominate a representative for your data rights</li>
+      <li>File a complaint with the Data Protection Board of India</li>
+    </ul>
+    <p style="margin-top:8px">To exercise any right, email: <a href="mailto:sonawalesvijay@gmail.com">sonawalesvijay@gmail.com</a>. We respond within <strong class="w">30 days</strong>.</p>
+  </div>
+
+  <!-- 11 — DATA DELETION (critical for Play Store) -->
+  <div class="del-box">
+    <h3>🗑️ Account &amp; Data Deletion Request</h3>
+    <p style="color:#8b949e;font-size:14px;margin-bottom:10px">You have the right to request complete deletion of your Rummy Jodi account and all associated personal data. To submit a deletion request:</p>
+    <ol>
+      <li>Send an email to <a href="mailto:sonawalesvijay@gmail.com" style="color:#f87171">sonawalesvijay@gmail.com</a></li>
+      <li>Use subject line: <strong style="color:#c9d1d9">"Delete My Account — Rummy Jodi"</strong></li>
+      <li>Send the email from your <strong style="color:#c9d1d9">registered email address</strong></li>
+      <li>We will verify your identity and confirm deletion within <strong style="color:#c9d1d9">7 business days</strong></li>
+    </ol>
+    <div class="box box-yellow" style="margin-top:12px">
+      ⚠️ Note: Financial transaction records required by Indian law (Income Tax Act, GST) will be retained for the legally mandated period (7 years) even after account deletion.
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="sec" style="margin-top:28px">
+    <h2><span class="num">12</span> Financial Data &amp; UPI Withdrawals</h2>
+    <p>Rummy Jodi <strong class="w">only accepts UPI</strong> for prize withdrawals. We do not collect or store:</p>
+    <ul>
+      <li>Bank account numbers or IFSC codes</li>
+      <li>Debit/Credit card details</li>
+      <li>Net banking credentials</li>
+      <li>Aadhaar or PAN numbers (unless legally required for high-value TDS compliance)</li>
+    </ul>
+    <p style="margin-top:8px">Your UPI ID is collected only when you submit a withdrawal request and is used solely to transfer your winnings.</p>
+    <div class="box box-blue" style="margin-top:10px">
+      ℹ️ All prize winnings may be subject to <strong>TDS (Tax Deducted at Source)</strong> as per Section 194BA of the Income Tax Act, 1961.
+    </div>
+  </div>
+
+  <!-- 13 -->
+  <div class="sec">
+    <h2><span class="num">13</span> Third-Party Links &amp; Services</h2>
+    <p>The App may display links to third-party websites or services. We are not responsible for the privacy practices of those third parties. We encourage you to review their privacy policies before sharing any information with them.</p>
+  </div>
+
+  <!-- 14 -->
+  <div class="sec">
+    <h2><span class="num">14</span> Grievance Officer</h2>
+    <p>As required by the <strong class="w">IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021</strong> and the <strong class="w">DPDP Act, 2023</strong>:</p>
+    <div class="box box-purple" style="margin-top:12px">
+      <strong style="color:#f0f6fc">Name:</strong> Vijay Sonawale<br>
+      <strong style="color:#f0f6fc">Designation:</strong> Grievance Officer &amp; Data Protection Officer<br>
+      <strong style="color:#f0f6fc">Organization:</strong> Nextintinc<br>
+      <strong style="color:#f0f6fc">Email:</strong> <a href="mailto:sonawalesvijay@gmail.com">sonawalesvijay@gmail.com</a><br>
+      <strong style="color:#f0f6fc">Response time:</strong> Within 48 hours of receipt; resolved within 30 days
+    </div>
+  </div>
+
+  <!-- 15 -->
+  <div class="sec">
+    <h2><span class="num">15</span> Changes to This Policy</h2>
+    <p>We may update this Privacy Policy periodically. Material changes will be notified via the App. The "Last updated" date at the top of this page reflects the most recent revision. Continued use of the App after notification constitutes acceptance of the updated policy.</p>
+  </div>
+
+  <!-- Contact Card -->
+  <div class="contact-card">
+    <h3>Contact &amp; Support</h3>
+    <p>For all privacy queries, data requests, deletion requests, responsible gaming support, or grievances:</p>
+    <a class="btn" href="mailto:sonawalesvijay@gmail.com">✉️ sonawalesvijay@gmail.com</a>
+    <p style="margin-top:14px;font-size:13px;color:#484f58">
+      Grievance Officer: Vijay Sonawale &nbsp;·&nbsp; Nextintinc &nbsp;·&nbsp; India<br>
+      Response within 48 hours · Resolution within 30 days
+    </p>
+  </div>
+
+  <footer>
+    <p>© 2026 Nextintinc. All rights reserved. &nbsp;·&nbsp; <a href="mailto:sonawalesvijay@gmail.com">sonawalesvijay@gmail.com</a></p>
+    <p style="margin-top:6px">Rummy Jodi is a skill-based game. Real-money features available only to eligible Indian residents (18+).</p>
+    <p style="margin-top:6px">Compliant with IT Act 2000 · IT Rules 2021 · DPDP Act 2023 · Income Tax Act 1961</p>
+  </footer>
+
+</div>
 </body>
 </html>
